@@ -490,7 +490,7 @@ export default function HyeneScores() {
                           <button
                             onClick={() => toggleDropdown(match.id, 'home')}
                             className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
@@ -535,7 +535,7 @@ export default function HyeneScores() {
                             }}
                             placeholder="-"
                             className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
@@ -550,7 +550,7 @@ export default function HyeneScores() {
                             }}
                             placeholder="-"
                             className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
@@ -562,7 +562,7 @@ export default function HyeneScores() {
                           <button
                             onClick={() => toggleDropdown(match.id, 'away')}
                             className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
