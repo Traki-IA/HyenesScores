@@ -489,22 +489,22 @@ export default function HyeneScores() {
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {matches.map(match => (
-                    <div key={match.id} className="bg-black/30 border border-gray-800 rounded-lg p-3">
-                      <div className="flex items-center gap-2">
+                    <div key={match.id} className="bg-black/30 border border-gray-800 rounded-lg p-2">
+                      <div className="flex items-center gap-1.5">
                         {/* Home Team */}
-                        <div className="flex-[2] min-w-0 relative">
+                        <div className="flex-1 min-w-0 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'home')}
-                            className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
+                            className={`w-full bg-black/50 rounded-md px-2 py-2 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-xs font-semibold truncate">{match.homeTeam || '────────'}</span>
-                            <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="text-white text-[10px] font-semibold leading-tight break-words text-left">{match.homeTeam || '────────'}</span>
+                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                           </button>
@@ -514,7 +514,7 @@ export default function HyeneScores() {
                               <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
                                 <button
                                   onClick={() => handleTeamSelect(match.id, 'home', '')}
-                                  className="w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center text-white hover:bg-gray-800"
+                                  className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800"
                                 >
                                   Aucune équipe
                                 </button>
@@ -522,7 +522,7 @@ export default function HyeneScores() {
                                   <button
                                     key={team}
                                     onClick={() => handleTeamSelect(match.id, 'home', team)}
-                                    className="w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center text-white hover:bg-gray-800"
+                                    className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800"
                                   >
                                     {team}
                                   </button>
@@ -533,7 +533,7 @@ export default function HyeneScores() {
                         </div>
 
                         {/* Scores */}
-                        <div className="flex items-center gap-1 flex-shrink-0 w-24">
+                        <div className="flex items-center gap-0.5 flex-shrink-0">
                           <input
                             type="number"
                             value={match.homeScore !== null ? match.homeScore : ''}
@@ -542,13 +542,13 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, homeScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                            className={`bg-black/50 rounded-md w-9 h-9 text-center text-cyan-400 text-sm font-bold outline-none transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
                           />
-                          <span className="text-gray-600 font-bold text-sm">:</span>
+                          <span className="text-gray-600 font-bold text-xs px-0.5">-</span>
                           <input
                             type="number"
                             value={match.awayScore !== null ? match.awayScore : ''}
@@ -557,7 +557,7 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, awayScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                            className={`bg-black/50 rounded-md w-9 h-9 text-center text-cyan-400 text-sm font-bold outline-none transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
@@ -566,17 +566,17 @@ export default function HyeneScores() {
                         </div>
 
                         {/* Away Team */}
-                        <div className="flex-[2] min-w-0 relative">
+                        <div className="flex-1 min-w-0 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'away')}
-                            className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
+                            className={`w-full bg-black/50 rounded-md px-2 py-2 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-xs font-semibold truncate">{match.awayTeam || '────────'}</span>
-                            <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="text-white text-[10px] font-semibold leading-tight break-words text-left">{match.awayTeam || '────────'}</span>
+                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                           </button>
@@ -586,7 +586,7 @@ export default function HyeneScores() {
                               <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
                                 <button
                                   onClick={() => handleTeamSelect(match.id, 'away', '')}
-                                  className="w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center text-white hover:bg-gray-800"
+                                  className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800"
                                 >
                                   Aucune équipe
                                 </button>
@@ -594,7 +594,7 @@ export default function HyeneScores() {
                                   <button
                                     key={team}
                                     onClick={() => handleTeamSelect(match.id, 'away', team)}
-                                    className="w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center text-white hover:bg-gray-800"
+                                    className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800"
                                   >
                                     {team}
                                   </button>
