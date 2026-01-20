@@ -7,6 +7,7 @@ export default function HyeneScores() {
   const [selectedChampionship, setSelectedChampionship] = useState('hyenes');
   const [selectedSeason, setSelectedSeason] = useState('9');
   const [isSeasonOpen, setIsSeasonOpen] = useState(false);
+  const [isChampOpen, setIsChampOpen] = useState(false);
 
   const championships = [
     { id: 'hyenes', icon: '🏆', name: 'Ligue des Hyènes' },
@@ -192,40 +193,64 @@ export default function HyeneScores() {
       {/* CLASSEMENT */}
       {selectedTab === 'classement' && (
         <div className="h-full flex flex-col">
-          <div className="px-4 pt-4 pb-3 flex-shrink-0">
-            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-4 text-center">
+          <div className="px-4 pt-4 pb-2 flex-shrink-0">
+            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-3 text-center">
               <h1 className="text-cyan-400 text-2xl font-bold tracking-widest">CLASSEMENT</h1>
             </div>
           </div>
 
           <div className="flex-1 px-4 pb-3 overflow-hidden">
             <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl h-full flex flex-col overflow-hidden">
-              
+
               {/* Selectors */}
-              <div className="px-4 py-3 border-b border-gray-800 flex-shrink-0 relative">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <div className="grid grid-cols-5 gap-2">
-                      {championships.map(champ => (
-                        <button
-                          key={champ.id}
-                          onClick={() => setSelectedChampionship(champ.id)}
-                          className={`flex items-center justify-center py-3 rounded-lg transition-all min-h-[48px] ${
-                            selectedChampionship === champ.id
-                              ? 'bg-cyan-500/20 border-2 border-cyan-500/50'
-                              : 'bg-black/50 border border-gray-800 hover:border-cyan-500/30 opacity-60 hover:opacity-100'
-                          }`}
-                        >
-                          <span className="text-2xl">{champ.icon}</span>
-                        </button>
-                      ))}
-                    </div>
+              <div className="px-3 py-2 border-b border-gray-800 flex-shrink-0 relative">
+                <div className="flex items-stretch gap-2">
+                  <div className="flex-1 relative">
+                    <button
+                      onClick={() => setIsChampOpen(!isChampOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isChampOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                      </div>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isChampOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsChampOpen(false)}></div>
+                        <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                          {championships.map(champ => (
+                            <button
+                              key={champ.id}
+                              onClick={() => {
+                                setSelectedChampionship(champ.id);
+                                setIsChampOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors flex items-center gap-2 ${
+                                selectedChampionship === champ.id
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
+                              }`}
+                            >
+                              <span className="text-xl">{champ.icon}</span>
+                              <span>{champ.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="w-32 relative">
                     <button
                       onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className={`w-full bg-black/50 border rounded-lg px-3 py-3 text-white text-sm font-medium cursor-pointer transition-colors min-h-[48px] flex items-center justify-between ${
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-3 text-white text-sm font-medium cursor-pointer transition-colors min-h-[48px] flex items-center justify-between ${
                         isSeasonOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
                       }`}
                     >
@@ -260,18 +285,18 @@ export default function HyeneScores() {
               </div>
 
               {/* Progress Bar */}
-              <div className="px-4 py-2 border-b border-gray-800 flex-shrink-0">
+              <div className="px-3 py-1.5 border-b border-gray-800 flex-shrink-0">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-500 text-xs font-semibold">Journée 53/72</span>
                   <span className="text-cyan-400 text-xs font-bold">73.6%</span>
                 </div>
-                <div className="bg-gray-800 rounded-full h-2 overflow-hidden">
+                <div className="bg-gray-800 rounded-full h-1.5 overflow-hidden">
                   <div className="bg-gradient-to-r from-cyan-500 to-cyan-400 h-full rounded-full" style={{ width: '73.6%' }}></div>
                 </div>
               </div>
 
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-1 px-4 py-2 bg-gray-900/50 border-b border-gray-800 flex-shrink-0">
+              <div className="grid grid-cols-12 gap-1 px-3 py-1.5 bg-gray-900/50 border-b border-gray-800 flex-shrink-0">
                 <div className="col-span-1 text-gray-500 text-xs font-semibold tracking-widest text-center">#</div>
                 <div className="col-span-3 text-gray-500 text-xs font-semibold tracking-widest text-left">CLUB</div>
                 <div className="col-span-2 text-gray-500 text-xs font-semibold tracking-widest text-center">PTS</div>
@@ -281,12 +306,12 @@ export default function HyeneScores() {
               </div>
 
               {/* Teams List */}
-              <div className="flex-1 overflow-y-auto px-4 pb-2">
+              <div className="flex-1 overflow-y-auto px-3 pb-1">
                 {teams.map(team => (
-                  <div 
+                  <div
                     key={team.rank}
-                    className="grid grid-cols-12 gap-1 py-2 border-b border-gray-800/50 hover:bg-gray-900/30 transition-all items-center"
-                    style={{ height: '48px', minHeight: '48px', maxHeight: '48px' }}
+                    className="grid grid-cols-12 gap-1 py-1.5 border-b border-gray-800/50 hover:bg-gray-900/30 transition-all items-center"
+                    style={{ height: '40px', minHeight: '40px', maxHeight: '40px' }}
                   >
                     <div className="col-span-1 font-bold text-sm whitespace-nowrap overflow-hidden text-cyan-400">
                       {team.rank < 10 ? `0${team.rank}` : team.rank}
@@ -319,8 +344,8 @@ export default function HyeneScores() {
       {/* MATCH */}
       {selectedTab === 'match' && (
         <div className="h-full flex flex-col">
-          <div className="px-4 pt-4 pb-3 flex-shrink-0">
-            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-4 text-center">
+          <div className="px-4 pt-4 pb-2 flex-shrink-0">
+            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-3 text-center">
               <h1 className="text-cyan-400 text-2xl font-bold tracking-widest">MATCHS</h1>
             </div>
           </div>
@@ -329,45 +354,80 @@ export default function HyeneScores() {
             <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl h-full flex flex-col overflow-hidden">
               
               {/* Selectors */}
-              <div className="px-4 py-3 border-b border-gray-800 flex-shrink-0 relative">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 grid grid-cols-4 gap-3">
-                    {championships.filter(c => c.id !== 'hyenes').map(champ => (
-                      <button
-                        key={champ.id}
-                        onClick={() => setSelectedChampionship(champ.id)}
-                        className={`flex items-center justify-center py-3 rounded-lg transition-all min-h-[52px] ${
-                          selectedChampionship === champ.id
-                            ? 'bg-cyan-500/30 border-2 border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.3)]'
-                            : 'bg-black/50 border border-gray-800 hover:border-cyan-500/30 opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <span className="text-3xl">{champ.icon}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="w-28 relative">
+              <div className="px-3 py-2 border-b border-gray-800 flex-shrink-0 relative">
+                <div className="flex items-stretch gap-2">
+                  {/* Championship Dropdown */}
+                  <div className="flex-1 relative">
                     <button
-                      onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className="w-full bg-black/50 border border-gray-800 rounded-lg px-2 py-3 text-white text-sm font-medium min-h-[48px] flex items-center justify-between"
+                      onClick={() => setIsChampOpen(!isChampOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isChampOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
                     >
-                      <span className="text-xs">Saison {selectedSeason}</span>
-                      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                      </div>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-                    
+
+                    {isChampOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsChampOpen(false)}></div>
+                        <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                          {championships.filter(c => c.id !== 'hyenes').map(champ => (
+                            <button
+                              key={champ.id}
+                              onClick={() => {
+                                setSelectedChampionship(champ.id);
+                                setIsChampOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors flex items-center gap-2 ${
+                                selectedChampionship === champ.id
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
+                              }`}
+                            >
+                              <span className="text-xl">{champ.icon}</span>
+                              <span>{champ.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Season Dropdown */}
+                  <div className="flex-1 relative">
+                    <button
+                      onClick={() => setIsSeasonOpen(!isSeasonOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isSeasonOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
+                    >
+                      <span>Saison {selectedSeason}</span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isSeasonOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
                     {isSeasonOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setIsSeasonOpen(false)}></div>
-                        <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 w-28 max-h-64 overflow-y-auto">
+                        <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
                           {seasons.map(season => (
                             <button
                               key={season}
-                              onClick={() => handleSeasonSelect(season)}
-                              className={`w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center ${
-                                selectedSeason === season ? 'bg-cyan-500/20 text-cyan-400' : 'text-white hover:bg-gray-800'
+                              onClick={() => {
+                                setSelectedSeason(season);
+                                setIsSeasonOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors ${
+                                selectedSeason === season
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
                               }`}
                             >
                               Saison {season}
@@ -378,27 +438,35 @@ export default function HyeneScores() {
                     )}
                   </div>
 
-                  <div className="w-28 relative">
+                  {/* Journée Dropdown */}
+                  <div className="flex-1 relative">
                     <button
                       onClick={() => setIsJourneeOpen(!isJourneeOpen)}
-                      className="w-full bg-black/50 border border-gray-800 rounded-lg px-2 py-3 text-white text-sm font-medium min-h-[48px] flex items-center justify-between"
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isJourneeOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
                     >
-                      <span className="text-xs">Journée {selectedJournee}</span>
-                      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <span>Journée {selectedJournee}</span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isJourneeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-                    
+
                     {isJourneeOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setIsJourneeOpen(false)}></div>
-                        <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 w-28 max-h-64 overflow-y-auto">
+                        <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 w-32 max-h-64 overflow-y-auto">
                           {journees.map(journee => (
                             <button
                               key={journee}
-                              onClick={() => handleJourneeSelect(journee)}
-                              className={`w-full px-3 py-2 text-xs font-medium text-left transition-colors min-h-[40px] flex items-center ${
-                                selectedJournee === journee ? 'bg-cyan-500/20 text-cyan-400' : 'text-white hover:bg-gray-800'
+                              onClick={() => {
+                                setSelectedJournee(journee);
+                                setIsJourneeOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors ${
+                                selectedJournee === journee
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
                               }`}
                             >
                               Journée {journee}
@@ -422,12 +490,12 @@ export default function HyeneScores() {
                           <button
                             onClick={() => toggleDropdown(match.id, 'home')}
                             className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-sm font-semibold truncate">{match.homeTeam || 'Équipe'}</span>
+                            <span className="text-white text-xs font-semibold truncate">{match.homeTeam || 'Équipe'}</span>
                             <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -466,8 +534,8 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, homeScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-11 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
@@ -481,8 +549,8 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, awayScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-11 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
@@ -494,12 +562,12 @@ export default function HyeneScores() {
                           <button
                             onClick={() => toggleDropdown(match.id, 'away')}
                             className={`w-full bg-black/50 rounded-md px-3 py-3 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer min-h-[48px] transition-all duration-300 ${
-                              match.homeScore !== null && match.awayScore !== null
+                              match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-sm font-semibold truncate">{match.awayTeam || 'Équipe'}</span>
+                            <span className="text-white text-xs font-semibold truncate">{match.awayTeam || 'Équipe'}</span>
                             <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -540,8 +608,8 @@ export default function HyeneScores() {
       {/* PALMARES */}
       {selectedTab === 'palmares' && (
         <div className="h-full flex flex-col">
-          <div className="px-4 pt-4 pb-3 flex-shrink-0">
-            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-4 text-center">
+          <div className="px-4 pt-4 pb-2 flex-shrink-0">
+            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-cyan-500/50 rounded-xl p-3 text-center">
               <h1 className="text-cyan-400 text-2xl font-bold tracking-widest">PALMARÈS</h1>
             </div>
           </div>
@@ -550,25 +618,88 @@ export default function HyeneScores() {
             <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl h-full flex flex-col overflow-hidden">
               
               {/* Selectors */}
-              <div className="px-4 py-3 border-b border-gray-800 flex gap-2 flex-shrink-0">
-                <div className="flex-1 grid grid-cols-4 gap-2">
-                  {championships.filter(c => c.id !== 'hyenes').map(champ => (
+              <div className="px-3 py-2 border-b border-gray-800 flex-shrink-0 relative">
+                <div className="flex items-stretch gap-2">
+                  {/* Championship Dropdown */}
+                  <div className="flex-1 relative">
                     <button
-                      key={champ.id}
-                      onClick={() => setSelectedChampionship(champ.id)}
-                      className={`flex items-center justify-center py-3 rounded-lg transition-all min-h-[48px] ${
-                        selectedChampionship === champ.id
-                          ? 'bg-cyan-500/30 border-2 border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.3)]'
-                          : 'bg-black/50 border border-gray-800 hover:border-cyan-500/30 opacity-60 hover:opacity-100'
+                      onClick={() => setIsChampOpen(!isChampOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isChampOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
                       }`}
                     >
-                      <span className="text-2xl">{champ.icon}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                      </div>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
                     </button>
-                  ))}
-                </div>
-                <div className="w-28">
-                  <div className="bg-black/50 border border-gray-800 rounded-lg px-2 py-3 min-h-[48px] flex items-center justify-center">
-                    <span className="text-xs text-white font-semibold">Saison {selectedSeason}</span>
+
+                    {isChampOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsChampOpen(false)}></div>
+                        <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                          {championships.map(champ => (
+                            <button
+                              key={champ.id}
+                              onClick={() => {
+                                setSelectedChampionship(champ.id);
+                                setIsChampOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors flex items-center gap-2 ${
+                                selectedChampionship === champ.id
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
+                              }`}
+                            >
+                              <span className="text-xl">{champ.icon}</span>
+                              <span>{champ.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Season Dropdown */}
+                  <div className="w-28 relative">
+                    <button
+                      onClick={() => setIsSeasonOpen(!isSeasonOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isSeasonOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
+                    >
+                      <span>Saison {selectedSeason}</span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isSeasonOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isSeasonOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsSeasonOpen(false)}></div>
+                        <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 w-28 max-h-64 overflow-y-auto">
+                          {seasons.map(season => (
+                            <button
+                              key={season}
+                              onClick={() => {
+                                setSelectedSeason(season);
+                                setIsSeasonOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors ${
+                                selectedSeason === season
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
+                              }`}
+                            >
+                              Saison {season}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
