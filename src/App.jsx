@@ -250,12 +250,12 @@ export default function HyeneScores() {
                   <div className="w-32 relative">
                     <button
                       onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-3 text-white text-sm font-medium cursor-pointer transition-colors min-h-[48px] flex items-center justify-between ${
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
                         isSeasonOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
                       }`}
                     >
                       <span>Saison {selectedSeason}</span>
-                      <svg className={`w-5 h-5 text-gray-500 transition-transform ${isSeasonOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isSeasonOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
@@ -268,7 +268,7 @@ export default function HyeneScores() {
                             <button
                               key={season}
                               onClick={() => handleSeasonSelect(season)}
-                              className={`w-full px-4 py-3 text-sm font-medium text-left transition-colors min-h-[44px] flex items-center ${
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors ${
                                 selectedSeason === season
                                   ? 'bg-cyan-500/20 text-cyan-400'
                                   : 'text-white hover:bg-gray-800'
