@@ -201,10 +201,10 @@ export default function HyeneScores() {
 
           <div className="flex-1 px-4 pb-3 overflow-hidden">
             <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl h-full flex flex-col overflow-hidden">
-              
+
               {/* Selectors */}
-              <div className="px-4 py-3 border-b border-gray-800 flex-shrink-0 relative">
-                <div className="flex items-center gap-2">
+              <div className="px-3 py-2 border-b border-gray-800 flex-shrink-0 relative">
+                <div className="flex items-stretch gap-2">
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setIsChampOpen(!isChampOpen)}
@@ -250,7 +250,7 @@ export default function HyeneScores() {
                   <div className="w-32 relative">
                     <button
                       onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className={`w-full bg-black/50 border rounded-lg px-3 py-3 text-white text-sm font-medium cursor-pointer transition-colors min-h-[48px] flex items-center justify-between ${
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-3 text-white text-sm font-medium cursor-pointer transition-colors min-h-[48px] flex items-center justify-between ${
                         isSeasonOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
                       }`}
                     >
