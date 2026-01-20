@@ -296,7 +296,7 @@ export default function HyeneScores() {
               </div>
 
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-1 px-4 py-2 bg-gray-900/50 border-b border-gray-800 flex-shrink-0">
+              <div className="grid grid-cols-12 gap-1 px-3 py-1.5 bg-gray-900/50 border-b border-gray-800 flex-shrink-0">
                 <div className="col-span-1 text-gray-500 text-xs font-semibold tracking-widest text-center">#</div>
                 <div className="col-span-3 text-gray-500 text-xs font-semibold tracking-widest text-left">CLUB</div>
                 <div className="col-span-2 text-gray-500 text-xs font-semibold tracking-widest text-center">PTS</div>
