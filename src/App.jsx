@@ -205,22 +205,46 @@ export default function HyeneScores() {
               {/* Selectors */}
               <div className="px-4 py-3 border-b border-gray-800 flex-shrink-0 relative">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <div className="grid grid-cols-5 gap-2">
-                      {championships.map(champ => (
-                        <button
-                          key={champ.id}
-                          onClick={() => setSelectedChampionship(champ.id)}
-                          className={`flex items-center justify-center py-3 rounded-lg transition-all min-h-[48px] ${
-                            selectedChampionship === champ.id
-                              ? 'bg-cyan-500/20 border-2 border-cyan-500/50'
-                              : 'bg-black/50 border border-gray-800 hover:border-cyan-500/30 opacity-60 hover:opacity-100'
-                          }`}
-                        >
-                          <span className="text-2xl">{champ.icon}</span>
-                        </button>
-                      ))}
-                    </div>
+                  <div className="flex-1 relative">
+                    <button
+                      onClick={() => setIsChampOpen(!isChampOpen)}
+                      className={`w-full h-full bg-black/50 border rounded-lg px-3 py-2.5 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                        isChampOpen ? 'border-cyan-500/50' : 'border-gray-800 hover:border-cyan-500/30'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                      </div>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isChampOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsChampOpen(false)}></div>
+                        <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                          {championships.map(champ => (
+                            <button
+                              key={champ.id}
+                              onClick={() => {
+                                setSelectedChampionship(champ.id);
+                                setIsChampOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 text-sm font-medium text-left transition-colors flex items-center gap-2 ${
+                                selectedChampionship === champ.id
+                                  ? 'bg-cyan-500/20 text-cyan-400'
+                                  : 'text-white hover:bg-gray-800'
+                              }`}
+                            >
+                              <span className="text-xl">{champ.icon}</span>
+                              <span>{champ.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="w-32 relative">
