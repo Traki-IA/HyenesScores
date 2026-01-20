@@ -306,12 +306,12 @@ export default function HyeneScores() {
               </div>
 
               {/* Teams List */}
-              <div className="flex-1 overflow-y-auto px-4 pb-2">
+              <div className="flex-1 overflow-y-auto px-3 pb-1">
                 {teams.map(team => (
-                  <div 
+                  <div
                     key={team.rank}
-                    className="grid grid-cols-12 gap-1 py-2 border-b border-gray-800/50 hover:bg-gray-900/30 transition-all items-center"
-                    style={{ height: '48px', minHeight: '48px', maxHeight: '48px' }}
+                    className="grid grid-cols-12 gap-1 py-1.5 border-b border-gray-800/50 hover:bg-gray-900/30 transition-all items-center"
+                    style={{ height: '40px', minHeight: '40px', maxHeight: '40px' }}
                   >
                     <div className="col-span-1 font-bold text-sm whitespace-nowrap overflow-hidden text-cyan-400">
                       {team.rank < 10 ? `0${team.rank}` : team.rank}
