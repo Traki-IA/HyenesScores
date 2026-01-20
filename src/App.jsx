@@ -199,7 +199,7 @@ export default function HyeneScores() {
             </div>
           </div>
 
-          <div className="flex-1 px-4 pb-20 overflow-hidden">
+          <div className="flex-1 px-4 pb-24 overflow-hidden">
             <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl h-full flex flex-col overflow-hidden">
 
               {/* Selectors */}
