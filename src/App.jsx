@@ -495,7 +495,7 @@ export default function HyeneScores() {
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-sm font-semibold truncate">{match.homeTeam || 'Équipe'}</span>
+                            <span className="text-white text-xs font-semibold truncate">{match.homeTeam || 'Équipe'}</span>
                             <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -534,7 +534,7 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, homeScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-11 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
                               match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
@@ -549,7 +549,7 @@ export default function HyeneScores() {
                               setMatches(matches.map(m => m.id === match.id ? { ...m, awayScore: value } : m));
                             }}
                             placeholder="-"
-                            className={`bg-black/50 rounded-md w-11 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
+                            className={`bg-black/50 rounded-md w-10 h-11 text-center text-cyan-400 text-lg font-bold outline-none transition-all duration-300 ${
                               match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_10px_rgba(16,185,129,0.2)]'
                                 : 'border border-gray-800 hover:border-cyan-500/50'
@@ -567,7 +567,7 @@ export default function HyeneScores() {
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-sm font-semibold truncate">{match.awayTeam || 'Équipe'}</span>
+                            <span className="text-white text-xs font-semibold truncate">{match.awayTeam || 'Équipe'}</span>
                             <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
