@@ -494,17 +494,17 @@ export default function HyeneScores() {
                     <div key={match.id} className="bg-black/30 border border-gray-800 rounded-lg p-2">
                       <div className="flex items-center gap-1.5">
                         {/* Home Team */}
-                        <div className="flex-1 min-w-0 relative">
+                        <div className="flex-1 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'home')}
-                            className={`w-full bg-black/50 rounded-md px-2 py-2 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
+                            className={`w-full bg-black/50 rounded-md px-2 py-1.5 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-[10px] font-semibold leading-tight break-words text-left">{match.homeTeam || '────────'}</span>
-                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1">{match.homeTeam || '────────'}</span>
+                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                           </button>
@@ -566,17 +566,17 @@ export default function HyeneScores() {
                         </div>
 
                         {/* Away Team */}
-                        <div className="flex-1 min-w-0 relative">
+                        <div className="flex-1 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'away')}
-                            className={`w-full bg-black/50 rounded-md px-2 py-2 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
+                            className={`w-full bg-black/50 rounded-md px-2 py-1.5 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
                               match.homeTeam && match.awayTeam && match.homeScore !== null && match.awayScore !== null
                                 ? 'border-2 border-emerald-500 shadow-[inset_0_0_8px_rgba(16,185,129,0.15)]'
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-[10px] font-semibold leading-tight break-words text-left">{match.awayTeam || '────────'}</span>
-                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1">{match.awayTeam || '────────'}</span>
+                            <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                           </button>
