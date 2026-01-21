@@ -489,12 +489,11 @@ export default function HyeneScores() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-0">
                   {matches.map(match => (
-                    <div key={match.id} className="bg-black/30 border border-gray-800 rounded-lg p-2">
-                      <div className="flex items-center gap-1.5">
-                        {/* Home Team */}
-                        <div className="flex-1 min-w-0 relative">
+                    <div key={match.id} className="grid grid-cols-12 items-center gap-2 py-2.5 border-b border-gray-800/50 last:border-b-0">
+                      {/* Home Team */}
+                      <div className="col-span-5 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'home')}
                             className={`w-full bg-black/50 rounded-md px-2 py-1.5 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
@@ -503,7 +502,7 @@ export default function HyeneScores() {
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1 truncate">{match.homeTeam || '────────'}</span>
+                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1">{match.homeTeam || '────────'}</span>
                             <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -511,7 +510,7 @@ export default function HyeneScores() {
                           {openDropdown?.matchId === match.id && openDropdown?.type === 'home' && (
                             <>
                               <div className="fixed inset-0 z-40" onClick={() => setOpenDropdown(null)}></div>
-                              <div className="absolute left-0 top-full mt-1 w-full min-w-[160px] bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                              <div className="absolute left-0 top-full mt-1 w-full min-w-[200px] bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
                                 <button
                                   onClick={() => handleTeamSelect(match.id, 'home', '')}
                                   className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800 whitespace-nowrap"
@@ -530,10 +529,10 @@ export default function HyeneScores() {
                               </div>
                             </>
                           )}
-                        </div>
+                      </div>
 
-                        {/* Scores */}
-                        <div className="flex items-center gap-0.5 flex-shrink-0">
+                      {/* Scores */}
+                      <div className="col-span-2 flex items-center justify-center gap-0.5">
                           <input
                             type="number"
                             value={match.homeScore !== null ? match.homeScore : ''}
@@ -563,10 +562,10 @@ export default function HyeneScores() {
                                 : 'border border-gray-800 hover:border-cyan-500/50'
                             }`}
                           />
-                        </div>
+                      </div>
 
-                        {/* Away Team */}
-                        <div className="flex-1 min-w-0 relative">
+                      {/* Away Team */}
+                      <div className="col-span-5 relative">
                           <button
                             onClick={() => toggleDropdown(match.id, 'away')}
                             className={`w-full bg-black/50 rounded-md px-2 py-1.5 flex items-center justify-between group hover:border-cyan-500/30 cursor-pointer transition-all duration-300 ${
@@ -575,7 +574,7 @@ export default function HyeneScores() {
                                 : 'border border-gray-800'
                             }`}
                           >
-                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1 truncate">{match.awayTeam || '────────'}</span>
+                            <span className="text-white text-[11px] font-semibold leading-tight text-left flex-1 pr-1">{match.awayTeam || '────────'}</span>
                             <svg className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -583,7 +582,7 @@ export default function HyeneScores() {
                           {openDropdown?.matchId === match.id && openDropdown?.type === 'away' && (
                             <>
                               <div className="fixed inset-0 z-40" onClick={() => setOpenDropdown(null)}></div>
-                              <div className="absolute left-0 top-full mt-1 w-full min-w-[160px] bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                              <div className="absolute left-0 top-full mt-1 w-full min-w-[200px] bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
                                 <button
                                   onClick={() => handleTeamSelect(match.id, 'away', '')}
                                   className="w-full px-3 py-2 text-xs font-medium text-left transition-colors flex items-center text-white hover:bg-gray-800 whitespace-nowrap"
@@ -602,7 +601,6 @@ export default function HyeneScores() {
                               </div>
                             </>
                           )}
-                        </div>
                       </div>
                     </div>
                   ))}
