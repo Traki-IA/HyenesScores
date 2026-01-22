@@ -146,9 +146,10 @@ export default function HyeneScores() {
 
     // Extraire matches[] depuis entities.matches
     if (data.entities.matches && Array.isArray(data.entities.matches)) {
+      // Utiliser le championshipKey mappé au lieu de championship
       const matchesForContext = data.entities.matches.find(
         block =>
-          block.championship === championship &&
+          block.championship === championshipKey &&
           block.season === parseInt(season) &&
           block.matchday === parseInt(journee)
       );
