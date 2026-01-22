@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 export default function HyeneScores() {
   const [selectedTab, setSelectedTab] = useState('classement');
@@ -69,10 +69,10 @@ export default function HyeneScores() {
     { id: 5, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null }
   ]);
 
-  const allTeams = [
+  const [allTeams, setAllTeams] = useState([
     'MILAN AC', 'STOCKY FC', 'BIMBAM', 'DYNAMO KEV', 'TRAKNAR FC',
     'FC GRINTA', 'COMARDINHO', 'MAMBA TEAM', 'WARNAQUE', 'NOPIGOAL FC'
-  ];
+  ]);
 
   const [openDropdown, setOpenDropdown] = useState(null);
   const [exemptTeam, setExemptTeam] = useState('');
@@ -89,17 +89,26 @@ export default function HyeneScores() {
   const [appData, setAppData] = useState(null);
 
   // Fonction pour charger les données depuis appData v2.0
-  const loadDataFromAppData = (data, championship, season, journee) => {
-    if (!data || !data.entities) return;
+  const loadDataFromAppData = useCallback((data, championship, season, journee) => {
+    if (!data || !data.entities) {
+      console.log('[loadDataFromAppData] Aucune donnée v2.0 disponible');
+      return;
+    }
+
+    console.log('[loadDataFromAppData] Chargement pour:', { championship, season, journee });
 
     // Extraire teams[] depuis entities.seasons
     const championshipKey = championship === 'hyenes' ? 'ligue_hyenes' : championship;
     const seasonKey = `${championshipKey}_s${season}`;
 
+    console.log('[loadDataFromAppData] Clé de saison:', seasonKey);
+
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
       const standings = data.entities.seasons[seasonKey].standings || [];
+      console.log('[loadDataFromAppData] Teams trouvées:', standings.length);
       setTeams(standings);
     } else {
+      console.warn('[loadDataFromAppData] Aucune donnée de classement pour:', seasonKey);
       setTeams([]);
     }
 
@@ -113,8 +122,10 @@ export default function HyeneScores() {
       );
 
       if (matchesForContext && matchesForContext.games) {
+        console.log('[loadDataFromAppData] Matches trouvés:', matchesForContext.games.length);
         setMatches(matchesForContext.games);
       } else {
+        console.warn('[loadDataFromAppData] Aucun match pour:', { championship, season, journee });
         // Réinitialiser avec des matchs vides
         setMatches([
           { id: 1, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
@@ -150,6 +161,7 @@ export default function HyeneScores() {
       });
 
       championsList.sort((a, b) => parseInt(b.season) - parseInt(a.season));
+      console.log('[loadDataFromAppData] Champions trouvés:', championsList.length);
       setChampions(championsList);
     }
 
@@ -158,19 +170,21 @@ export default function HyeneScores() {
       const exemptKey = `${championshipKey}_s${season}`;
       const exemptData = data.indexes.exemptTeams[exemptKey];
       if (exemptData && exemptData[journee]) {
+        console.log('[loadDataFromAppData] Équipe exemptée:', exemptData[journee]);
         setExemptTeam(exemptData[journee]);
       } else {
         setExemptTeam('');
       }
     }
-  };
+  }, []);
 
   // useEffect pour recharger les données quand le contexte change
   useEffect(() => {
     if (appData && appData.version === '2.0') {
+      console.log('[useEffect] Rechargement des données v2.0');
       loadDataFromAppData(appData, selectedChampionship, selectedSeason, selectedJournee);
     }
-  }, [selectedChampionship, selectedSeason, selectedJournee, appData]);
+  }, [selectedChampionship, selectedSeason, selectedJournee, appData, loadDataFromAppData]);
 
   // Fonctions Match
   const getAvailableTeams = (currentMatchId, currentType) => {
@@ -271,13 +285,24 @@ export default function HyeneScores() {
 
         if (version === '2.0') {
           // Format v2.0 optimisé
+          console.log('[handleFileChange] Import v2.0 détecté');
+
           if (!data.entities || !data.metadata) {
             alert('❌ Fichier v2.0 invalide : structure entities/metadata manquante');
             return;
           }
 
           // Stocker les données brutes v2.0 pour accès global
+          console.log('[handleFileChange] Structure du fichier:', Object.keys(data));
+          console.log('[handleFileChange] Entités disponibles:', Object.keys(data.entities || {}));
+          console.log('[handleFileChange] Metadata disponible:', Object.keys(data.metadata || {}));
           setAppData(data);
+
+          // Extraire allTeams depuis metadata.managers
+          if (data.metadata?.managers && Array.isArray(data.metadata.managers)) {
+            console.log('[handleFileChange] Managers trouvés:', data.metadata.managers.length);
+            setAllTeams(data.metadata.managers);
+          }
 
           // Charger les données pour le contexte actuel
           loadDataFromAppData(data, selectedChampionship, selectedSeason, selectedJournee);
