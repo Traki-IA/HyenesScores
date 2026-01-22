@@ -79,7 +79,16 @@ export default function HyeneScores() {
   const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
 
   const seasons = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  const journees = Array.from({ length: 18 }, (_, i) => (i + 1).toString());
+
+  // Nombre de journées dynamique selon le championnat
+  const getJourneesForChampionship = (championship) => {
+    // Ligue des Hyènes : 72 journées (10 équipes × 2 × 3.6 = 72)
+    // Autres championnats : 18 journées
+    const count = championship === 'hyenes' ? 72 : 18;
+    return Array.from({ length: count }, (_, i) => (i + 1).toString());
+  };
+
+  const journees = getJourneesForChampionship(selectedChampionship);
 
   // États Réglages
   const [showResetModal, setShowResetModal] = useState(false);
@@ -130,7 +139,8 @@ export default function HyeneScores() {
       setTeams(normalizedTeams);
 
       // Calculer la progression de la saison
-      const totalMatchdays = data.metadata?.matchesPerSeason || 72;
+      // Ligue des Hyènes : 72 journées, Autres championnats : 18 journées
+      const totalMatchdays = championship === 'hyenes' ? 72 : 18;
       const currentMatchday = standings[0]?.j || 0; // Nombre de matchs joués (colonne 'j')
       const percentage = totalMatchdays > 0 ? ((currentMatchday / totalMatchdays) * 100).toFixed(1) : 0;
 
@@ -244,6 +254,7 @@ export default function HyeneScores() {
 
   // Fonctions Match
   const getAvailableTeams = (currentMatchId, currentType) => {
+    console.log('[DROPDOWN] allTeams:', allTeams);
     const selectedTeams = [];
     matches.forEach(match => {
       if (match.id === currentMatchId) {
@@ -255,7 +266,9 @@ export default function HyeneScores() {
       }
     });
     if (exemptTeam) selectedTeams.push(exemptTeam);
-    return allTeams.filter(team => !selectedTeams.includes(team));
+    const available = allTeams.filter(team => !selectedTeams.includes(team));
+    console.log('[DROPDOWN] Équipes disponibles:', available);
+    return available;
   };
 
   const getAvailableTeamsForExempt = () => {
@@ -351,11 +364,13 @@ export default function HyeneScores() {
 
           // Extraire allTeams depuis metadata.managers
           if (data.metadata?.managers && Array.isArray(data.metadata.managers)) {
+            console.log('[IMPORT] Mise à jour allTeams avec:', data.metadata.managers);
             setAllTeams(data.metadata.managers);
           } else {
             // Fallback : extraire depuis entities.managers si metadata.managers n'existe pas
             if (data.entities.managers) {
               const managerNames = Object.keys(data.entities.managers);
+              console.log('[IMPORT] Mise à jour allTeams (fallback) avec:', managerNames);
               setAllTeams(managerNames);
             }
           }
