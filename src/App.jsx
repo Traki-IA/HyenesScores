@@ -101,11 +101,11 @@ export default function HyeneScores() {
 
       // Normaliser les données pour l'affichage (même transformation que v1.0)
       const normalizedTeams = standings.map(team => ({
-        rank: team.rank || team.pos || 0,
-        name: team.name || team.team || '?',
+        rank: team.pos || team.rank || 0,
+        name: team.mgr || team.name || team.team || '?',
         pts: team.pts || team.points || 0,
-        record: team.record || (team.w !== undefined ? `${team.w}-${team.d}-${team.l}` : (team.g !== undefined ? `${team.g}-${team.n}-${team.p}` : '0-0-0')),
-        goalDiff: team.goalDiff || (team.gf !== undefined ? `${team.gf}-${team.ga}` : (team.bp !== undefined ? `${team.bp}-${team.bc}` : '0-0')),
+        record: team.record || (team.g !== undefined ? `${team.g}-${team.n}-${team.p}` : (team.w !== undefined ? `${team.w}-${team.d}-${team.l}` : '0-0-0')),
+        goalDiff: team.goalDiff || (team.bp !== undefined ? `${team.bp}-${team.bc}` : (team.gf !== undefined ? `${team.gf}-${team.ga}` : '0-0')),
         diff: typeof team.diff === 'number'
           ? (team.diff >= 0 ? `+${team.diff}` : `${team.diff}`)
           : (team.diff || '+0')
@@ -158,13 +158,13 @@ export default function HyeneScores() {
 
         if (championshipId === championship) {
           const seasonData = data.entities.seasons[seasonKey];
-          const champion = seasonData.standings?.find(team => team.rank === 1);
+          const champion = seasonData.standings?.find(team => (team.pos || team.rank) === 1);
 
           if (champion) {
             championsList.push({
               season: seasonNum,
-              team: champion.name,
-              points: champion.pts
+              team: champion.mgr || champion.name || '?',
+              points: champion.pts || champion.points || 0
             });
           }
         }
@@ -308,18 +308,23 @@ export default function HyeneScores() {
           // Charger les données pour le contexte actuel
           loadDataFromAppData(data, selectedChampionship, selectedSeason, selectedJournee);
 
-          // Extraire pantheonTeams[] depuis entities.managers[].stats
-          if (data.entities.managers && Array.isArray(data.entities.managers)) {
-            const pantheon = data.entities.managers.map((manager, index) => ({
-              rank: index + 1,
-              name: manager.name,
-              trophies: manager.stats?.totalTitles || 0,
-              france: manager.stats?.france?.titles || 0,
-              spain: manager.stats?.spain?.titles || 0,
-              italy: manager.stats?.italy?.titles || 0,
-              england: manager.stats?.england?.titles || 0,
-              total: manager.stats?.totalTitles || 0
-            }));
+          // Extraire pantheonTeams[] depuis entities.managers
+          if (data.entities.managers) {
+            const pantheon = Object.values(data.entities.managers).map((manager, index) => {
+              const titles = manager.stats?.totalTitles || {};
+              const totalTitles = Object.values(titles).reduce((sum, count) => sum + (count || 0), 0);
+
+              return {
+                rank: index + 1,
+                name: manager.name || '?',
+                trophies: titles.ligue_hyenes || 0,
+                france: titles.france || 0,
+                spain: titles.espagne || titles.spain || 0,
+                italy: titles.italie || titles.italy || 0,
+                england: titles.angleterre || titles.england || 0,
+                total: totalTitles
+              };
+            });
 
             // Trier par nombre de trophées
             pantheon.sort((a, b) => b.total - a.total);
