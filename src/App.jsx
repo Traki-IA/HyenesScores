@@ -93,7 +93,15 @@ export default function HyeneScores() {
     if (!data || !data.entities) return;
 
     // Extraire teams[] depuis entities.seasons
-    const championshipKey = championship === 'hyenes' ? 'ligue_hyenes' : championship;
+    // Mapper les IDs de championnat vers les clés du fichier v2.0
+    const championshipMapping = {
+      'hyenes': 'ligue_hyenes',
+      'france': 'france',
+      'spain': 'espagne',
+      'italy': 'italie',
+      'england': 'angleterre'
+    };
+    const championshipKey = championshipMapping[championship] || championship;
     const seasonKey = `${championshipKey}_s${season}`;
 
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
@@ -149,12 +157,21 @@ export default function HyeneScores() {
 
     // Extraire champions[] pour le championnat sélectionné
     if (data.entities.seasons) {
+      // Mapping inverse pour comparer les clés du fichier avec le championship sélectionné
+      const reverseMapping = {
+        'ligue_hyenes': 'hyenes',
+        'france': 'france',
+        'espagne': 'spain',
+        'italie': 'italy',
+        'angleterre': 'england'
+      };
+
       const championsList = [];
       Object.keys(data.entities.seasons).forEach(seasonKey => {
         const parts = seasonKey.split('_');
         const seasonNum = parts[parts.length - 1].replace('s', '');
         const championshipName = parts.slice(0, -1).join('_');
-        const championshipId = championshipName === 'ligue_hyenes' ? 'hyenes' : championshipName;
+        const championshipId = reverseMapping[championshipName] || championshipName;
 
         if (championshipId === championship) {
           const seasonData = data.entities.seasons[seasonKey];
