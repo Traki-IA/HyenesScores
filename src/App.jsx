@@ -144,11 +144,13 @@ export default function HyeneScores() {
       setSeasonProgress({ currentMatchday: 0, totalMatchdays: 72, percentage: 0 });
     }
 
-    // Extraire matches[] depuis entities.matches
+    // Extraire matches[] depuis entities.matches (si disponible)
+    // Note: Le format v2.0 pourrait ne pas inclure les matches, seulement les standings finaux
     if (data.entities.matches && Array.isArray(data.entities.matches)) {
+      // Utiliser le championshipKey mappé au lieu de championship
       const matchesForContext = data.entities.matches.find(
         block =>
-          block.championship === championship &&
+          block.championship === championshipKey &&
           block.season === parseInt(season) &&
           block.matchday === parseInt(journee)
       );
@@ -164,7 +166,7 @@ export default function HyeneScores() {
         }));
         setMatches(normalizedMatches);
       } else {
-        // Réinitialiser avec des matchs vides
+        // Pas de données de matches pour cette journée - réinitialiser
         setMatches([
           { id: 1, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
           { id: 2, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
@@ -173,6 +175,16 @@ export default function HyeneScores() {
           { id: 5, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null }
         ]);
       }
+    } else {
+      // entities.matches n'existe pas dans ce fichier v2.0
+      // Les matches devront être saisis manuellement
+      setMatches([
+        { id: 1, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
+        { id: 2, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
+        { id: 3, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
+        { id: 4, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null },
+        { id: 5, homeTeam: '', awayTeam: '', homeScore: null, awayScore: null }
+      ]);
     }
 
     // Extraire champions[] pour le championnat sélectionné
@@ -340,6 +352,12 @@ export default function HyeneScores() {
           // Extraire allTeams depuis metadata.managers
           if (data.metadata?.managers && Array.isArray(data.metadata.managers)) {
             setAllTeams(data.metadata.managers);
+          } else {
+            // Fallback : extraire depuis entities.managers si metadata.managers n'existe pas
+            if (data.entities.managers) {
+              const managerNames = Object.keys(data.entities.managers);
+              setAllTeams(managerNames);
+            }
           }
 
           // Charger les données pour le contexte actuel
