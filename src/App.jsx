@@ -88,6 +88,13 @@ export default function HyeneScores() {
   // État pour stocker les données brutes v2.0
   const [appData, setAppData] = useState(null);
 
+  // État pour la progression de la saison
+  const [seasonProgress, setSeasonProgress] = useState({
+    currentMatchday: 53,
+    totalMatchdays: 72,
+    percentage: 73.6
+  });
+
   // Fonction pour charger les données depuis appData v2.0
   const loadDataFromAppData = useCallback((data, championship, season, journee) => {
     if (!data || !data.entities) return;
@@ -106,6 +113,7 @@ export default function HyeneScores() {
 
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
       const standings = data.entities.seasons[seasonKey].standings || [];
+      const seasonData = data.entities.seasons[seasonKey];
 
       // Normaliser les données pour l'affichage (même transformation que v1.0)
       const normalizedTeams = standings.map(team => ({
@@ -120,8 +128,20 @@ export default function HyeneScores() {
       }));
 
       setTeams(normalizedTeams);
+
+      // Calculer la progression de la saison
+      const totalMatchdays = data.metadata?.matchesPerSeason || 72;
+      const currentMatchday = standings[0]?.j || 0; // Nombre de matchs joués (colonne 'j')
+      const percentage = totalMatchdays > 0 ? ((currentMatchday / totalMatchdays) * 100).toFixed(1) : 0;
+
+      setSeasonProgress({
+        currentMatchday,
+        totalMatchdays,
+        percentage: parseFloat(percentage)
+      });
     } else {
       setTeams([]);
+      setSeasonProgress({ currentMatchday: 0, totalMatchdays: 72, percentage: 0 });
     }
 
     // Extraire matches[] depuis entities.matches
@@ -546,11 +566,13 @@ export default function HyeneScores() {
               {/* Progress Bar */}
               <div className="px-2 py-1.5 border-b border-gray-800 flex-shrink-0">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-gray-500 text-xs font-semibold">Journée 53/72</span>
-                  <span className="text-cyan-400 text-xs font-bold">73.6%</span>
+                  <span className="text-gray-500 text-xs font-semibold">
+                    Journée {seasonProgress.currentMatchday}/{seasonProgress.totalMatchdays}
+                  </span>
+                  <span className="text-cyan-400 text-xs font-bold">{seasonProgress.percentage}%</span>
                 </div>
                 <div className="bg-gray-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-gradient-to-r from-cyan-500 via-teal-400 to-green-400 h-full rounded-full" style={{ width: '73.6%' }}></div>
+                  <div className="bg-gradient-to-r from-cyan-500 via-teal-400 to-green-400 h-full rounded-full" style={{ width: `${seasonProgress.percentage}%` }}></div>
                 </div>
               </div>
 
