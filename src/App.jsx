@@ -99,13 +99,16 @@ export default function HyeneScores() {
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
       const standings = data.entities.seasons[seasonKey].standings || [];
 
-      // Normaliser les données pour l'affichage
+      // Normaliser les données pour l'affichage (même transformation que v1.0)
       const normalizedTeams = standings.map(team => ({
-        ...team,
-        // S'assurer que diff est une string avec le bon format
+        rank: team.rank || team.pos || 0,
+        name: team.name || team.team || '?',
+        pts: team.pts || team.points || 0,
+        record: team.record || (team.w !== undefined ? `${team.w}-${team.d}-${team.l}` : (team.g !== undefined ? `${team.g}-${team.n}-${team.p}` : '0-0-0')),
+        goalDiff: team.goalDiff || (team.gf !== undefined ? `${team.gf}-${team.ga}` : (team.bp !== undefined ? `${team.bp}-${team.bc}` : '0-0')),
         diff: typeof team.diff === 'number'
           ? (team.diff >= 0 ? `+${team.diff}` : `${team.diff}`)
-          : team.diff
+          : (team.diff || '+0')
       }));
 
       setTeams(normalizedTeams);
@@ -123,7 +126,15 @@ export default function HyeneScores() {
       );
 
       if (matchesForContext && matchesForContext.games) {
-        setMatches(matchesForContext.games);
+        // Normaliser les matches pour s'assurer que les champs sont corrects
+        const normalizedMatches = matchesForContext.games.map((match, index) => ({
+          id: match.id || (index + 1),
+          homeTeam: match.homeTeam || match.home || match.equipe1 || '',
+          awayTeam: match.awayTeam || match.away || match.equipe2 || '',
+          homeScore: match.homeScore !== undefined ? match.homeScore : (match.scoreHome !== undefined ? match.scoreHome : null),
+          awayScore: match.awayScore !== undefined ? match.awayScore : (match.scoreAway !== undefined ? match.scoreAway : null)
+        }));
+        setMatches(normalizedMatches);
       } else {
         // Réinitialiser avec des matchs vides
         setMatches([
