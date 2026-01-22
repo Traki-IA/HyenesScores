@@ -323,18 +323,51 @@ export default function HyeneScores() {
 
           alert('✅ Données v2.0 importées avec succès !');
         } else {
-          // Format v1.0 legacy (comportement original)
+          // Format v1.0 legacy - transformer vers format interne
+
+          // Transformer classement
           if (data.classement && Array.isArray(data.classement)) {
-            setTeams(data.classement);
+            const transformedTeams = data.classement.map(team => ({
+              rank: team.pos || team.rank,
+              name: team.name,
+              pts: team.pts,
+              record: team.record || (team.g !== undefined ? `${team.g}-${team.n}-${team.p}` : '0-0-0'),
+              goalDiff: team.goalDiff || (team.bp !== undefined ? `${team.bp}-${team.bc}` : '0-0'),
+              diff: team.diff !== undefined
+                ? (typeof team.diff === 'string' ? team.diff : (team.diff >= 0 ? `+${team.diff}` : `${team.diff}`))
+                : '+0'
+            }));
+            setTeams(transformedTeams);
           }
+
+          // Matches (pas de transformation nécessaire)
           if (data.matches && Array.isArray(data.matches)) {
             setMatches(data.matches);
           }
+
+          // Transformer palmarès
           if (data.palmares && Array.isArray(data.palmares)) {
-            setChampions(data.palmares);
+            const transformedChampions = data.palmares.map(champion => ({
+              season: champion.season || champion.saison || '?',
+              team: champion.team || champion.equipe || champion.name || '?',
+              points: champion.points || champion.pts || 0
+            }));
+            setChampions(transformedChampions);
           }
+
+          // Transformer panthéon
           if (data.pantheon && Array.isArray(data.pantheon)) {
-            setPantheonTeams(data.pantheon);
+            const transformedPantheon = data.pantheon.map((team, index) => ({
+              rank: team.rank || team.pos || (index + 1),
+              name: team.name || team.equipe || '?',
+              trophies: team.trophies || team.titres || team.total || 0,
+              france: team.france || 0,
+              spain: team.spain || team.espagne || 0,
+              italy: team.italy || team.italie || 0,
+              england: team.england || team.angleterre || 0,
+              total: team.total || team.trophies || team.titres || 0
+            }));
+            setPantheonTeams(transformedPantheon);
           }
 
           alert('✅ Données v1.0 importées avec succès !');
