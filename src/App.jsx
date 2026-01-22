@@ -93,19 +93,30 @@ export default function HyeneScores() {
     if (!data || !data.entities) return;
 
     // Extraire teams[] depuis entities.seasons
-    const championshipKey = championship === 'hyenes' ? 'ligue_hyenes' : championship;
+    // Mapper les IDs de championnat vers les clés du fichier v2.0
+    const championshipMapping = {
+      'hyenes': 'ligue_hyenes',
+      'france': 'france',
+      'spain': 'espagne',
+      'italy': 'italie',
+      'england': 'angleterre'
+    };
+    const championshipKey = championshipMapping[championship] || championship;
     const seasonKey = `${championshipKey}_s${season}`;
 
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
       const standings = data.entities.seasons[seasonKey].standings || [];
 
-      // Normaliser les données pour l'affichage
+      // Normaliser les données pour l'affichage (même transformation que v1.0)
       const normalizedTeams = standings.map(team => ({
-        ...team,
-        // S'assurer que diff est une string avec le bon format
+        rank: team.pos || team.rank || 0,
+        name: team.mgr || team.name || team.team || '?',
+        pts: team.pts || team.points || 0,
+        record: team.record || (team.g !== undefined ? `${team.g}-${team.n}-${team.p}` : (team.w !== undefined ? `${team.w}-${team.d}-${team.l}` : '0-0-0')),
+        goalDiff: team.goalDiff || (team.bp !== undefined ? `${team.bp}-${team.bc}` : (team.gf !== undefined ? `${team.gf}-${team.ga}` : '0-0')),
         diff: typeof team.diff === 'number'
           ? (team.diff >= 0 ? `+${team.diff}` : `${team.diff}`)
-          : team.diff
+          : (team.diff || '+0')
       }));
 
       setTeams(normalizedTeams);
@@ -123,7 +134,15 @@ export default function HyeneScores() {
       );
 
       if (matchesForContext && matchesForContext.games) {
-        setMatches(matchesForContext.games);
+        // Normaliser les matches pour s'assurer que les champs sont corrects
+        const normalizedMatches = matchesForContext.games.map((match, index) => ({
+          id: match.id || (index + 1),
+          homeTeam: match.homeTeam || match.home || match.equipe1 || '',
+          awayTeam: match.awayTeam || match.away || match.equipe2 || '',
+          homeScore: match.homeScore !== undefined ? match.homeScore : (match.scoreHome !== undefined ? match.scoreHome : null),
+          awayScore: match.awayScore !== undefined ? match.awayScore : (match.scoreAway !== undefined ? match.scoreAway : null)
+        }));
+        setMatches(normalizedMatches);
       } else {
         // Réinitialiser avec des matchs vides
         setMatches([
@@ -138,22 +157,31 @@ export default function HyeneScores() {
 
     // Extraire champions[] pour le championnat sélectionné
     if (data.entities.seasons) {
+      // Mapping inverse pour comparer les clés du fichier avec le championship sélectionné
+      const reverseMapping = {
+        'ligue_hyenes': 'hyenes',
+        'france': 'france',
+        'espagne': 'spain',
+        'italie': 'italy',
+        'angleterre': 'england'
+      };
+
       const championsList = [];
       Object.keys(data.entities.seasons).forEach(seasonKey => {
         const parts = seasonKey.split('_');
         const seasonNum = parts[parts.length - 1].replace('s', '');
         const championshipName = parts.slice(0, -1).join('_');
-        const championshipId = championshipName === 'ligue_hyenes' ? 'hyenes' : championshipName;
+        const championshipId = reverseMapping[championshipName] || championshipName;
 
         if (championshipId === championship) {
           const seasonData = data.entities.seasons[seasonKey];
-          const champion = seasonData.standings?.find(team => team.rank === 1);
+          const champion = seasonData.standings?.find(team => (team.pos || team.rank) === 1);
 
           if (champion) {
             championsList.push({
               season: seasonNum,
-              team: champion.name,
-              points: champion.pts
+              team: champion.mgr || champion.name || '?',
+              points: champion.pts || champion.points || 0
             });
           }
         }
@@ -297,18 +325,23 @@ export default function HyeneScores() {
           // Charger les données pour le contexte actuel
           loadDataFromAppData(data, selectedChampionship, selectedSeason, selectedJournee);
 
-          // Extraire pantheonTeams[] depuis entities.managers[].stats
-          if (data.entities.managers && Array.isArray(data.entities.managers)) {
-            const pantheon = data.entities.managers.map((manager, index) => ({
-              rank: index + 1,
-              name: manager.name,
-              trophies: manager.stats?.totalTitles || 0,
-              france: manager.stats?.france?.titles || 0,
-              spain: manager.stats?.spain?.titles || 0,
-              italy: manager.stats?.italy?.titles || 0,
-              england: manager.stats?.england?.titles || 0,
-              total: manager.stats?.totalTitles || 0
-            }));
+          // Extraire pantheonTeams[] depuis entities.managers
+          if (data.entities.managers) {
+            const pantheon = Object.values(data.entities.managers).map((manager, index) => {
+              const titles = manager.stats?.totalTitles || {};
+              const totalTitles = Object.values(titles).reduce((sum, count) => sum + (count || 0), 0);
+
+              return {
+                rank: index + 1,
+                name: manager.name || '?',
+                trophies: titles.ligue_hyenes || 0,
+                france: titles.france || 0,
+                spain: titles.espagne || titles.spain || 0,
+                italy: titles.italie || titles.italy || 0,
+                england: titles.angleterre || titles.england || 0,
+                total: totalTitles
+              };
+            });
 
             // Trier par nombre de trophées
             pantheon.sort((a, b) => b.total - a.total);
