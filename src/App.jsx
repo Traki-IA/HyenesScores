@@ -106,7 +106,17 @@ export default function HyeneScores() {
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
       const standings = data.entities.seasons[seasonKey].standings || [];
       console.log('[loadDataFromAppData] Teams trouvées:', standings.length);
-      setTeams(standings);
+
+      // Normaliser les données pour l'affichage
+      const normalizedTeams = standings.map(team => ({
+        ...team,
+        // S'assurer que diff est une string avec le bon format
+        diff: typeof team.diff === 'number'
+          ? (team.diff >= 0 ? `+${team.diff}` : `${team.diff}`)
+          : team.diff
+      }));
+
+      setTeams(normalizedTeams);
     } else {
       console.warn('[loadDataFromAppData] Aucune donnée de classement pour:', seasonKey);
       setTeams([]);
@@ -532,7 +542,7 @@ export default function HyeneScores() {
                       {team.goalDiff}
                     </div>
                     <div className="col-span-1 text-center whitespace-nowrap overflow-hidden">
-                      <span className={`text-xs font-semibold ${team.diff.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                      <span className={`text-xs font-semibold ${String(team.diff || '').startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
                         {team.diff}
                       </span>
                     </div>
