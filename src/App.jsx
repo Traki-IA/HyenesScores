@@ -319,7 +319,13 @@ export default function HyeneScores() {
         palmares: champions,
         pantheon: pantheonTeams,
         exportDate: new Date().toISOString(),
-        version: '1.0'
+        version: '1.0',
+        // Ajouter le contexte pour savoir quel championnat/saison/journée
+        context: {
+          championship: selectedChampionship,
+          season: selectedSeason,
+          journee: selectedJournee
+        }
       };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -418,6 +424,13 @@ export default function HyeneScores() {
         } else {
           // Format v1.0 legacy - transformer vers format interne
 
+          // Restaurer le contexte si disponible (championnat/saison/journée)
+          if (data.context) {
+            if (data.context.championship) setSelectedChampionship(data.context.championship);
+            if (data.context.season) setSelectedSeason(data.context.season);
+            if (data.context.journee) setSelectedJournee(data.context.journee);
+          }
+
           // Transformer classement
           if (data.classement && Array.isArray(data.classement)) {
             const transformedTeams = data.classement.map(team => ({
@@ -431,6 +444,12 @@ export default function HyeneScores() {
                 : '+0'
             }));
             setTeams(transformedTeams);
+
+            // Extraire allTeams depuis le classement
+            const teamNames = transformedTeams.map(team => team.name);
+            if (teamNames.length > 0) {
+              setAllTeams(teamNames);
+            }
           }
 
           // Matches (pas de transformation nécessaire)
