@@ -214,11 +214,20 @@ export default function HyeneScores() {
           const champion = seasonData.standings?.find(team => (team.pos || team.rank) === 1);
 
           if (champion) {
-            championsList.push({
-              season: seasonNum,
-              team: champion.mgr || champion.name || '?',
-              points: champion.pts || champion.points || 0
-            });
+            // Vérifier si la saison est terminée
+            // Ligue des Hyènes : 72 journées, Autres : 18 journées
+            const totalMatchdays = championshipId === 'hyenes' ? 72 : 18;
+            const currentMatchday = champion.j || 0;
+            const isSeasonComplete = currentMatchday >= totalMatchdays;
+
+            // N'ajouter au palmarès que si la saison est terminée
+            if (isSeasonComplete) {
+              championsList.push({
+                season: seasonNum,
+                team: champion.mgr || champion.name || '?',
+                points: champion.pts || champion.points || 0
+              });
+            }
           }
         }
       });
@@ -768,10 +777,10 @@ export default function HyeneScores() {
                     <div className="col-span-4 flex items-center whitespace-nowrap overflow-hidden">
                       <span className="text-white font-semibold text-sm tracking-wide">{team.name}</span>
                     </div>
-                    <div className="col-span-2 text-center whitespace-nowrap overflow-hidden flex items-center justify-center gap-1">
+                    <div className="col-span-2 text-center whitespace-nowrap overflow-hidden relative">
                       <span className="text-green-500 font-bold text-lg drop-shadow-[0_0_10px_rgba(34,197,94,0.6)]">{team.effectivePts}</span>
                       {getTeamPenalty(team.name) > 0 && (
-                        <span className="text-orange-400 text-[10px] font-medium">*</span>
+                        <span className="text-orange-400 text-[10px] font-medium absolute -top-0.5 ml-0.5">*</span>
                       )}
                     </div>
                     <div className="col-span-2 text-center text-white text-xs font-medium whitespace-nowrap overflow-hidden">
