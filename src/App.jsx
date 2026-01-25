@@ -70,6 +70,13 @@ export default function HyeneScores() {
     percentage: 0
   });
 
+  // États pour les pénalités
+  const [penalties, setPenalties] = useState({}); // { "championshipId_seasonId_teamName": points }
+  const [isPenaltyModalOpen, setIsPenaltyModalOpen] = useState(false);
+  const [selectedPenaltyTeam, setSelectedPenaltyTeam] = useState('');
+  const [penaltyPoints, setPenaltyPoints] = useState('');
+  const [isPenaltyTeamDropdownOpen, setIsPenaltyTeamDropdownOpen] = useState(false);
+
   // Fonction pour charger les données depuis appData v2.0
   const loadDataFromAppData = useCallback((data, championship, season, journee) => {
     if (!data || !data.entities) return;
@@ -284,6 +291,57 @@ export default function HyeneScores() {
     setIsSeasonOpen(false);
   };
 
+  // Fonctions pour les pénalités
+  const getPenaltyKey = (teamName) => {
+    return `${selectedChampionship}_${selectedSeason}_${teamName}`;
+  };
+
+  const getTeamPenalty = (teamName) => {
+    const key = getPenaltyKey(teamName);
+    return penalties[key] || 0;
+  };
+
+  const handleApplyPenalty = () => {
+    if (!selectedPenaltyTeam || !penaltyPoints) return;
+
+    const points = parseInt(penaltyPoints);
+    if (isNaN(points) || points < 0) {
+      alert('Veuillez entrer un nombre de points valide (positif)');
+      return;
+    }
+
+    const key = getPenaltyKey(selectedPenaltyTeam);
+    setPenalties(prev => ({
+      ...prev,
+      [key]: points
+    }));
+
+    // Réinitialiser le formulaire
+    setSelectedPenaltyTeam('');
+    setPenaltyPoints('');
+    setIsPenaltyModalOpen(false);
+  };
+
+  const handleRemovePenalty = (teamName) => {
+    const key = getPenaltyKey(teamName);
+    setPenalties(prev => {
+      const newPenalties = { ...prev };
+      delete newPenalties[key];
+      return newPenalties;
+    });
+  };
+
+  // Obtenir les équipes avec pénalités pour la saison actuelle
+  const getTeamsWithPenalties = () => {
+    const prefix = `${selectedChampionship}_${selectedSeason}_`;
+    return Object.entries(penalties)
+      .filter(([key]) => key.startsWith(prefix))
+      .map(([key, points]) => ({
+        teamName: key.replace(prefix, ''),
+        points
+      }));
+  };
+
   const handleJourneeSelect = (journee) => {
     setSelectedJournee(journee);
     setIsJourneeOpen(false);
@@ -297,6 +355,7 @@ export default function HyeneScores() {
         matches,
         palmares: champions,
         pantheon: pantheonTeams,
+        penalties: penalties,
         exportDate: new Date().toISOString(),
         version: '1.0',
         // Ajouter le contexte pour savoir quel championnat/saison/journée
@@ -416,6 +475,11 @@ export default function HyeneScores() {
             setPantheonTeams(pantheon);
           }
 
+          // Importer les pénalités (format v2.0)
+          if (data.penalties && typeof data.penalties === 'object') {
+            setPenalties(data.penalties);
+          }
+
           alert('✅ Données v2.0 importées avec succès !');
         } else {
           // Format v1.0 legacy - transformer vers format interne
@@ -485,6 +549,11 @@ export default function HyeneScores() {
               total: team.total || team.trophies || team.titres || 0
             }));
             setPantheonTeams(transformedPantheon);
+          }
+
+          // Importer les pénalités
+          if (data.penalties && typeof data.penalties === 'object') {
+            setPenalties(data.penalties);
           }
 
           alert('✅ Données v1.0 importées avec succès !');
@@ -665,7 +734,14 @@ export default function HyeneScores() {
                       <span className="text-white font-semibold text-sm tracking-wide">{team.name}</span>
                     </div>
                     <div className="col-span-2 text-center whitespace-nowrap overflow-hidden">
-                      <span className="text-green-500 font-bold text-lg drop-shadow-[0_0_10px_rgba(34,197,94,0.6)]">{team.pts}</span>
+                      {getTeamPenalty(team.name) > 0 ? (
+                        <span className="text-orange-500 font-bold text-lg drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]">
+                          {team.pts - getTeamPenalty(team.name)}
+                          <span className="text-xs text-red-400 ml-0.5">(-{getTeamPenalty(team.name)})</span>
+                        </span>
+                      ) : (
+                        <span className="text-green-500 font-bold text-lg drop-shadow-[0_0_10px_rgba(34,197,94,0.6)]">{team.pts}</span>
+                      )}
                     </div>
                     <div className="col-span-2 text-center text-white text-xs font-medium whitespace-nowrap overflow-hidden">
                       {team.record}
@@ -680,7 +756,145 @@ export default function HyeneScores() {
                     </div>
                   </div>
                 ))}
+
+                {/* Section Pénalités */}
+                <div className="mt-4 pt-4 border-t border-gray-800">
+                  <div className="bg-black/30 border border-orange-500/30 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-orange-400 text-sm font-bold tracking-wide">PÉNALITÉS</span>
+                        {getTeamsWithPenalties().length > 0 && (
+                          <span className="bg-orange-500/20 text-orange-400 text-xs px-2 py-0.5 rounded-full">
+                            {getTeamsWithPenalties().length}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => setIsPenaltyModalOpen(true)}
+                        className="bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500/50 rounded-lg px-3 py-1.5 text-orange-400 text-xs font-medium transition-colors flex items-center gap-1"
+                      >
+                        <span>+</span>
+                        <span>Ajouter</span>
+                      </button>
+                    </div>
+
+                    {/* Liste des pénalités actives */}
+                    {getTeamsWithPenalties().length > 0 ? (
+                      <div className="space-y-2">
+                        {getTeamsWithPenalties().map(({ teamName, points }) => (
+                          <div
+                            key={teamName}
+                            className="flex items-center justify-between bg-black/40 border border-gray-800 rounded-lg px-3 py-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-white text-sm font-medium">{teamName}</span>
+                              <span className="text-red-400 text-xs font-bold">-{points} pts</span>
+                            </div>
+                            <button
+                              onClick={() => handleRemovePenalty(teamName)}
+                              className="text-gray-500 hover:text-red-400 transition-colors p-1"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-xs text-center">Aucune pénalité pour cette saison</p>
+                    )}
+                  </div>
+                </div>
               </div>
+
+              {/* Modal Pénalité */}
+              {isPenaltyModalOpen && (
+                <>
+                  <div className="fixed inset-0 bg-black/80 z-50" onClick={() => setIsPenaltyModalOpen(false)}></div>
+                  <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
+                    <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-orange-500 rounded-xl p-6 max-w-md w-full">
+                      <div className="text-center mb-6">
+                        <div className="text-4xl mb-3">-</div>
+                        <h3 className="text-orange-400 text-xl font-bold mb-1">AJOUTER UNE PÉNALITÉ</h3>
+                        <p className="text-gray-400 text-sm">Retirer des points à une équipe</p>
+                      </div>
+
+                      {/* Sélection équipe */}
+                      <div className="mb-4">
+                        <label className="block text-gray-400 text-xs font-medium mb-2">Équipe</label>
+                        <div className="relative">
+                          <button
+                            onClick={() => setIsPenaltyTeamDropdownOpen(!isPenaltyTeamDropdownOpen)}
+                            className="w-full bg-black/50 border border-gray-700 hover:border-orange-500/50 rounded-lg px-4 py-3 text-white text-sm font-medium cursor-pointer transition-colors flex items-center justify-between"
+                          >
+                            <span className="truncate">{selectedPenaltyTeam || 'Sélectionner une équipe'}</span>
+                            <svg className="w-4 h-4 text-gray-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                          {isPenaltyTeamDropdownOpen && (
+                            <>
+                              <div className="fixed inset-0 z-40" onClick={() => setIsPenaltyTeamDropdownOpen(false)}></div>
+                              <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-orange-500/30 rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto">
+                                {teams.map(team => (
+                                  <button
+                                    key={team.name}
+                                    onClick={() => {
+                                      setSelectedPenaltyTeam(team.name);
+                                      setIsPenaltyTeamDropdownOpen(false);
+                                    }}
+                                    className={`w-full px-3 py-2 text-sm font-medium text-left transition-colors ${
+                                      selectedPenaltyTeam === team.name
+                                        ? 'bg-orange-500/20 text-orange-400'
+                                        : 'text-white hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {team.name}
+                                  </button>
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Points de pénalité */}
+                      <div className="mb-6">
+                        <label className="block text-gray-400 text-xs font-medium mb-2">Points à retirer</label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={penaltyPoints}
+                          onChange={(e) => setPenaltyPoints(e.target.value)}
+                          placeholder="Ex: 3"
+                          className="w-full bg-black/50 border border-gray-700 focus:border-orange-500/50 rounded-lg px-4 py-3 text-white text-sm outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => {
+                            setIsPenaltyModalOpen(false);
+                            setSelectedPenaltyTeam('');
+                            setPenaltyPoints('');
+                          }}
+                          className="flex-1 bg-gray-800 hover:bg-gray-700 rounded-lg px-4 py-3 text-white text-sm font-medium transition-colors"
+                        >
+                          Annuler
+                        </button>
+                        <button
+                          onClick={handleApplyPenalty}
+                          disabled={!selectedPenaltyTeam || !penaltyPoints}
+                          className="flex-1 bg-orange-900/50 border border-orange-500 hover:bg-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-3 text-orange-400 text-sm font-bold transition-colors"
+                        >
+                          Appliquer
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
           </div>
         </div>
       )}
