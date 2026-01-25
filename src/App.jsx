@@ -74,6 +74,9 @@ export default function HyeneScores() {
   const loadDataFromAppData = useCallback((data, championship, season, journee) => {
     if (!data || !data.entities) return;
 
+    // Réinitialiser l'équipe exemptée au début (sera mise à jour si trouvée)
+    setExemptTeam('');
+
     // Extraire teams[] depuis entities.seasons
     // Mapper les IDs de championnat vers les clés du fichier v2.0
     const championshipMapping = {
@@ -145,6 +148,12 @@ export default function HyeneScores() {
                      (match.scoreAway !== undefined ? match.scoreAway : null))
         }));
         setMatches(normalizedMatches);
+
+        // Extraire l'équipe exemptée depuis le bloc match (format v2.0)
+        const exemptFromMatch = matchesForContext.exempt || matchesForContext.ex || '';
+        if (exemptFromMatch) {
+          setExemptTeam(exemptFromMatch);
+        }
       } else {
         // Pas de données de matches pour cette journée - réinitialiser
         setMatches([
@@ -203,15 +212,14 @@ export default function HyeneScores() {
       setChampions(championsList);
     }
 
-    // Extraire l'équipe exemptée pour cette journée
+    // Extraire l'équipe exemptée pour cette journée (depuis indexes, si pas déjà trouvée dans le bloc match)
     if (data.indexes?.exemptTeams) {
       const exemptKey = `${championshipKey}_s${season}`;
       const exemptData = data.indexes.exemptTeams[exemptKey];
       if (exemptData && exemptData[journee]) {
         setExemptTeam(exemptData[journee]);
-      } else {
-        setExemptTeam('');
       }
+      // Ne pas réinitialiser si déjà défini depuis le bloc match
     }
   }, []);
 
@@ -221,6 +229,13 @@ export default function HyeneScores() {
       loadDataFromAppData(appData, selectedChampionship, selectedSeason, selectedJournee);
     }
   }, [selectedChampionship, selectedSeason, selectedJournee, appData, loadDataFromAppData]);
+
+  // useEffect pour basculer automatiquement vers 'france' si on entre dans Match avec 'hyenes'
+  useEffect(() => {
+    if (selectedTab === 'match' && selectedChampionship === 'hyenes') {
+      setSelectedChampionship('france');
+    }
+  }, [selectedTab, selectedChampionship]);
 
   // Fonctions Match
   const getAvailableTeams = (currentMatchId, currentType) => {
