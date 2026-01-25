@@ -176,6 +176,14 @@ export default function HyeneScores() {
       ]);
     }
 
+    // Charger l'équipe exemptée depuis indexes.exemptTeams (si pas déjà définie depuis le bloc match)
+    if (data.indexes?.exemptTeams) {
+      const exemptFromIndex = data.indexes.exemptTeams[journee];
+      if (exemptFromIndex) {
+        setExemptTeam(exemptFromIndex);
+      }
+    }
+
     // Extraire champions[] pour le championnat sélectionné
     if (data.entities.seasons) {
       // Mapping inverse pour comparer les clés du fichier avec le championship sélectionné
