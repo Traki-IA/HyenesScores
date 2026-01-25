@@ -176,9 +176,9 @@ export default function HyeneScores() {
       ]);
     }
 
-    // Charger l'équipe exemptée depuis indexes.exemptTeams (si pas déjà définie depuis le bloc match)
+    // Charger l'équipe exemptée pour cette saison (depuis indexes.exemptTeams)
     if (data.indexes?.exemptTeams) {
-      const exemptFromIndex = data.indexes.exemptTeams[journee];
+      const exemptFromIndex = data.indexes.exemptTeams[season];
       if (exemptFromIndex) {
         setExemptTeam(exemptFromIndex);
       }
@@ -220,13 +220,6 @@ export default function HyeneScores() {
       setChampions(championsList);
     }
 
-    // Extraire l'équipe exemptée pour cette journée (depuis indexes.exemptTeams)
-    if (data.indexes?.exemptTeams) {
-      const exemptFromIndex = data.indexes.exemptTeams[journee];
-      if (exemptFromIndex) {
-        setExemptTeam(exemptFromIndex);
-      }
-    }
   }, []);
 
   // useEffect pour recharger les données quand le contexte change
