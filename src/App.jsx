@@ -1335,7 +1335,7 @@ export default function HyeneScores() {
                             <>
                               <div className="fixed inset-0 z-40" onClick={() => setOpenDropdown(null)}></div>
                               <div
-                                className="fixed bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto w-[130px]"
+                                className="fixed bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-[420px] overflow-y-auto w-[130px]"
                                 style={{
                                   top: `${dropdownPosition.top}px`,
                                   left: dropdownPosition.left !== 'auto' ? `${dropdownPosition.left}px` : 'auto',
@@ -1418,7 +1418,7 @@ export default function HyeneScores() {
                             <>
                               <div className="fixed inset-0 z-40" onClick={() => setOpenDropdown(null)}></div>
                               <div
-                                className="fixed bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto w-[130px]"
+                                className="fixed bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-[420px] overflow-y-auto w-[130px]"
                                 style={{
                                   top: `${dropdownPosition.top}px`,
                                   left: dropdownPosition.left !== 'auto' ? `${dropdownPosition.left}px` : 'auto',
@@ -1466,7 +1466,7 @@ export default function HyeneScores() {
                         {isTeamDropdownOpen && (
                           <>
                             <div className="fixed inset-0 z-40" onClick={() => setIsTeamDropdownOpen(false)}></div>
-                            <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-64 overflow-y-auto">
+                            <div className="absolute left-0 right-0 top-full mt-1 bg-gray-900 border border-cyan-500/30 rounded-lg shadow-2xl z-50 max-h-[420px] overflow-y-auto">
                               <button
                                 onClick={() => {
                                   setExemptTeam('');
