@@ -771,7 +771,7 @@ export default function HyeneScores() {
                     className="grid grid-cols-12 gap-1 py-1.5 border-b border-gray-800/50 hover:bg-gray-900/30 transition-all items-center"
                     style={{ height: '40px', minHeight: '40px', maxHeight: '40px' }}
                   >
-                    <div className="col-span-1 font-bold text-sm whitespace-nowrap overflow-hidden text-cyan-400">
+                    <div className="col-span-1 flex items-center justify-center font-mono font-bold text-sm whitespace-nowrap overflow-hidden text-cyan-400">
                       {team.displayRank < 10 ? `0${team.displayRank}` : team.displayRank}
                     </div>
                     <div className="col-span-4 flex items-center whitespace-nowrap overflow-hidden">
@@ -1361,7 +1361,7 @@ export default function HyeneScores() {
                     className="py-2 border-b border-gray-800 hover:bg-gray-900/30 transition-colors h-[48px]"
                   >
                     <div className="grid grid-cols-12 gap-0.5 items-center w-full h-full">
-                      <div className="col-span-1 flex items-center justify-center font-bold text-sm text-cyan-400">
+                      <div className="col-span-1 flex items-center justify-center font-mono font-bold text-sm text-cyan-400">
                         {team.rank < 10 ? `0${team.rank}` : team.rank}
                       </div>
                       <div className="col-span-4 flex items-center text-left pl-1">
