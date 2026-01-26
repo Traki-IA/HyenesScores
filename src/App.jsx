@@ -116,9 +116,13 @@ export default function HyeneScores() {
 
       // Calculer la progression de la saison
       // Ligue des Hyènes : 72 journées, Autres championnats : 18 journées
-      // Cas spécial : France S6 - saison avec 8 journées seulement
-      const isFranceS6 = championship === 'france' && season === '6';
-      const totalMatchdays = championship === 'hyenes' ? 72 : (isFranceS6 ? 8 : 18);
+      // Cas spécial S6 : France a 8 journées, donc Ligue des Hyènes S6 = 62 (8+18+18+18)
+      const isS6 = season === '6';
+      const isFranceS6 = championship === 'france' && isS6;
+      const isHyenesS6 = championship === 'hyenes' && isS6;
+      const totalMatchdays = championship === 'hyenes'
+        ? (isHyenesS6 ? 62 : 72)
+        : (isFranceS6 ? 8 : 18);
       const currentMatchday = standings[0]?.j || 0; // Nombre de matchs joués (colonne 'j')
       const percentage = totalMatchdays > 0 ? ((currentMatchday / totalMatchdays) * 100).toFixed(1) : 0;
 
@@ -218,11 +222,16 @@ export default function HyeneScores() {
           if (champion) {
             // Vérifier si la saison est terminée
             // Ligue des Hyènes : 72 journées, Autres : 18 journées
-            const totalMatchdays = championshipId === 'hyenes' ? 72 : 18;
+            // Cas spécial S6 : France a 8 journées, Ligue des Hyènes S6 = 62
+            const isS6 = seasonNum === '6';
+            const isFranceS6 = championshipName === 'france' && isS6;
+            const isHyenesS6 = championshipName === 'ligue_hyenes' && isS6;
+            const totalMatchdays = championshipId === 'hyenes'
+              ? (isHyenesS6 ? 62 : 72)
+              : 18;
             const currentMatchday = champion.j || 0;
 
-            // Cas spécial : France S6 - saison avec 8 journées seulement
-            const isFranceS6 = championshipName === 'france' && seasonNum === '6';
+            // France S6 et Hyènes S6 sont considérées comme terminées
             const isSeasonComplete = isFranceS6 || currentMatchday >= totalMatchdays;
 
             // N'ajouter au palmarès que si la saison est terminée
