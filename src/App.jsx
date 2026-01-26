@@ -116,7 +116,9 @@ export default function HyeneScores() {
 
       // Calculer la progression de la saison
       // Ligue des Hyènes : 72 journées, Autres championnats : 18 journées
-      const totalMatchdays = championship === 'hyenes' ? 72 : 18;
+      // Cas spécial : France S6 - saison avec 8 journées seulement
+      const isFranceS6 = championship === 'france' && season === '6';
+      const totalMatchdays = championship === 'hyenes' ? 72 : (isFranceS6 ? 8 : 18);
       const currentMatchday = standings[0]?.j || 0; // Nombre de matchs joués (colonne 'j')
       const percentage = totalMatchdays > 0 ? ((currentMatchday / totalMatchdays) * 100).toFixed(1) : 0;
 
@@ -218,12 +220,15 @@ export default function HyeneScores() {
             // Ligue des Hyènes : 72 journées, Autres : 18 journées
             const totalMatchdays = championshipId === 'hyenes' ? 72 : 18;
             const currentMatchday = champion.j || 0;
-            const isSeasonComplete = currentMatchday >= totalMatchdays;
+
+            // Cas spécial : France S6 - saison avec 8 journées seulement
+            const isFranceS6 = championshipName === 'france' && seasonNum === '6';
+            const isSeasonComplete = isFranceS6 || currentMatchday >= totalMatchdays;
 
             // N'ajouter au palmarès que si la saison est terminée
             if (isSeasonComplete) {
               // Cas spécial : France S6 - deux champions ex-aequo
-              if (championshipName === 'france' && seasonNum === '6') {
+              if (isFranceS6) {
                 championsList.push({
                   season: seasonNum,
                   team: 'BimBam / Warnaque',
