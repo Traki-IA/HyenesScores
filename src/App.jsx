@@ -103,8 +103,106 @@ export default function HyeneScores() {
     const seasonKey = `${championshipKey}_s${season}`;
 
     if (data.entities.seasons && data.entities.seasons[seasonKey]) {
-      const standings = data.entities.seasons[seasonKey].standings || [];
+      const savedStandings = data.entities.seasons[seasonKey].standings || [];
       const seasonData = data.entities.seasons[seasonKey];
+
+      // === RECALCULER le classement depuis TOUS les matchs de la saison ===
+      // (les standings sauvegardés peuvent être obsolètes si de nouvelles journées existent)
+      const allSeasonMatches = (data.entities.matches || []).filter(
+        block => block.championship === championshipKey &&
+                 block.season === parseInt(season)
+      );
+
+      let standings;
+
+      if (allSeasonMatches.length > 0) {
+        // Récupérer la liste de toutes les équipes
+        const teamList = data.entities.managers
+          ? Object.values(data.entities.managers).map(m => m.name || '?').filter(n => n !== '?')
+          : savedStandings.map(t => t.mgr || t.name || t.team).filter(Boolean);
+
+        // Initialiser les stats pour toutes les équipes à zéro
+        const teamStats = {};
+        teamList.forEach(team => {
+          teamStats[team] = {
+            name: team, pts: 0, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, diff: 0
+          };
+        });
+
+        // Parcourir TOUS les matchs de la saison (toutes les journées)
+        allSeasonMatches.forEach(matchBlock => {
+          if (matchBlock.games && Array.isArray(matchBlock.games)) {
+            matchBlock.games.forEach(match => {
+              if (match.homeScore !== null && match.awayScore !== null &&
+                  match.homeScore !== undefined && match.awayScore !== undefined) {
+                const home = match.homeTeam || match.h;
+                const away = match.awayTeam || match.a;
+                const homeScore = parseInt(match.homeScore);
+                const awayScore = parseInt(match.awayScore);
+
+                if (teamStats[home] && teamStats[away]) {
+                  teamStats[home].j++;
+                  teamStats[away].j++;
+                  teamStats[home].bp += homeScore;
+                  teamStats[home].bc += awayScore;
+                  teamStats[away].bp += awayScore;
+                  teamStats[away].bc += homeScore;
+
+                  if (homeScore > awayScore) {
+                    teamStats[home].pts += 3;
+                    teamStats[home].g++;
+                    teamStats[away].p++;
+                  } else if (homeScore < awayScore) {
+                    teamStats[away].pts += 3;
+                    teamStats[away].g++;
+                    teamStats[home].p++;
+                  } else {
+                    teamStats[home].pts++;
+                    teamStats[away].pts++;
+                    teamStats[home].n++;
+                    teamStats[away].n++;
+                  }
+                  teamStats[home].diff = teamStats[home].bp - teamStats[home].bc;
+                  teamStats[away].diff = teamStats[away].bp - teamStats[away].bc;
+                }
+              }
+            });
+          }
+        });
+
+        // Appliquer les pénalités et trier
+        const sortedTeams = Object.values(teamStats)
+          .filter(team => team.j > 0)
+          .map(team => {
+            const penalty = getTeamPenaltyLocal(team.name, championship, season);
+            return {
+              ...team,
+              penalty: penalty,
+              effectivePts: team.pts - penalty
+            };
+          })
+          .sort((a, b) => {
+            if (b.effectivePts !== a.effectivePts) return b.effectivePts - a.effectivePts;
+            if (b.diff !== a.diff) return b.diff - a.diff;
+            return b.bp - a.bp;
+          });
+
+        standings = sortedTeams.map((team, index) => ({
+          pos: index + 1,
+          mgr: team.name,
+          pts: team.pts,
+          j: team.j,
+          g: team.g,
+          n: team.n,
+          p: team.p,
+          bp: team.bp,
+          bc: team.bc,
+          diff: team.diff
+        }));
+      } else {
+        // Pas de données de matchs - utiliser les standings sauvegardés
+        standings = savedStandings;
+      }
 
       // Normaliser les données pour l'affichage (même transformation que v1.0)
       const normalizedTeams = standings.map(team => ({
@@ -129,7 +227,10 @@ export default function HyeneScores() {
       const totalMatchdays = championship === 'hyenes'
         ? (isHyenesS6 ? 62 : 72)
         : (isFranceS6 ? 8 : 18);
-      const currentMatchday = standings[0]?.j || 0; // Nombre de matchs joués (colonne 'j')
+      // Utiliser le max des journées enregistrées plutôt que le nb de matchs de la 1ère équipe
+      const currentMatchday = allSeasonMatches.length > 0
+        ? Math.max(...allSeasonMatches.map(b => b.matchday))
+        : (standings[0]?.j || 0);
       const percentage = totalMatchdays > 0 ? ((currentMatchday / totalMatchdays) * 100).toFixed(1) : 0;
 
       setSeasonProgress({
