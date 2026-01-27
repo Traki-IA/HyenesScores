@@ -133,14 +133,21 @@ export default function HyeneScores() {
         allSeasonMatches.forEach(matchBlock => {
           if (matchBlock.games && Array.isArray(matchBlock.games)) {
             matchBlock.games.forEach(match => {
-              if (match.homeScore !== null && match.awayScore !== null &&
-                  match.homeScore !== undefined && match.awayScore !== undefined) {
-                const home = match.homeTeam || match.h;
-                const away = match.awayTeam || match.a;
-                const homeScore = parseInt(match.homeScore);
-                const awayScore = parseInt(match.awayScore);
+              // Normaliser les noms de champs (formats multiples selon la source)
+              const home = match.homeTeam || match.home || match.h || match.equipe1 || '';
+              const away = match.awayTeam || match.away || match.a || match.equipe2 || '';
+              const hs = match.homeScore !== undefined ? match.homeScore :
+                         (match.hs !== undefined ? match.hs :
+                         (match.scoreHome !== undefined ? match.scoreHome : null));
+              const as2 = match.awayScore !== undefined ? match.awayScore :
+                          (match.as !== undefined ? match.as :
+                          (match.scoreAway !== undefined ? match.scoreAway : null));
 
-                if (teamStats[home] && teamStats[away]) {
+              if (hs !== null && hs !== undefined && as2 !== null && as2 !== undefined) {
+                const homeScore = parseInt(hs);
+                const awayScore = parseInt(as2);
+
+                if (!isNaN(homeScore) && !isNaN(awayScore) && teamStats[home] && teamStats[away]) {
                   teamStats[home].j++;
                   teamStats[away].j++;
                   teamStats[home].bp += homeScore;
@@ -664,42 +671,50 @@ export default function HyeneScores() {
     allSeasonMatches.forEach(block => {
       if (block.games && Array.isArray(block.games)) {
         block.games.forEach(game => {
-          if (game.homeTeam && game.awayTeam &&
-              game.homeScore !== null && game.awayScore !== null &&
-              game.homeScore !== undefined && game.awayScore !== undefined) {
+          // Normaliser les noms de champs (formats multiples selon la source)
+          const home = game.homeTeam || game.home || game.h || game.equipe1 || '';
+          const away = game.awayTeam || game.away || game.a || game.equipe2 || '';
+          const hsVal = game.homeScore !== undefined ? game.homeScore :
+                        (game.hs !== undefined ? game.hs :
+                        (game.scoreHome !== undefined ? game.scoreHome : null));
+          const asVal = game.awayScore !== undefined ? game.awayScore :
+                        (game.as !== undefined ? game.as :
+                        (game.scoreAway !== undefined ? game.scoreAway : null));
 
-            const home = game.homeTeam;
-            const away = game.awayTeam;
-            const homeScore = parseInt(game.homeScore);
-            const awayScore = parseInt(game.awayScore);
+          if (home && away && hsVal !== null && hsVal !== undefined &&
+              asVal !== null && asVal !== undefined) {
+            const homeScore = parseInt(hsVal);
+            const awayScore = parseInt(asVal);
 
-            if (!teamStats[home]) {
-              teamStats[home] = { name: home, pts: 0, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, diff: 0 };
-            }
-            if (!teamStats[away]) {
-              teamStats[away] = { name: away, pts: 0, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, diff: 0 };
-            }
+            if (!isNaN(homeScore) && !isNaN(awayScore)) {
+              if (!teamStats[home]) {
+                teamStats[home] = { name: home, pts: 0, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, diff: 0 };
+              }
+              if (!teamStats[away]) {
+                teamStats[away] = { name: away, pts: 0, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, diff: 0 };
+              }
 
-            teamStats[home].j++;
-            teamStats[away].j++;
-            teamStats[home].bp += homeScore;
-            teamStats[home].bc += awayScore;
-            teamStats[away].bp += awayScore;
-            teamStats[away].bc += homeScore;
+              teamStats[home].j++;
+              teamStats[away].j++;
+              teamStats[home].bp += homeScore;
+              teamStats[home].bc += awayScore;
+              teamStats[away].bp += awayScore;
+              teamStats[away].bc += homeScore;
 
-            if (homeScore > awayScore) {
-              teamStats[home].g++;
-              teamStats[home].pts += 3;
-              teamStats[away].p++;
-            } else if (homeScore < awayScore) {
-              teamStats[away].g++;
-              teamStats[away].pts += 3;
-              teamStats[home].p++;
-            } else {
-              teamStats[home].n++;
-              teamStats[away].n++;
-              teamStats[home].pts += 1;
-              teamStats[away].pts += 1;
+              if (homeScore > awayScore) {
+                teamStats[home].g++;
+                teamStats[home].pts += 3;
+                teamStats[away].p++;
+              } else if (homeScore < awayScore) {
+                teamStats[away].g++;
+                teamStats[away].pts += 3;
+                teamStats[home].p++;
+              } else {
+                teamStats[home].n++;
+                teamStats[away].n++;
+                teamStats[home].pts += 1;
+                teamStats[away].pts += 1;
+              }
             }
           }
         });
@@ -1189,17 +1204,22 @@ export default function HyeneScores() {
       allSeasonMatches.forEach(matchBlock => {
         if (matchBlock.games && Array.isArray(matchBlock.games)) {
           matchBlock.games.forEach(match => {
-            // Vérifier que le match a des scores valides
-            if (match.homeScore !== null && match.awayScore !== null &&
-                match.homeScore !== undefined && match.awayScore !== undefined) {
+            // Normaliser les noms de champs (formats multiples selon la source)
+            const home = match.homeTeam || match.home || match.h || match.equipe1 || '';
+            const away = match.awayTeam || match.away || match.a || match.equipe2 || '';
+            const hs = match.homeScore !== undefined ? match.homeScore :
+                       (match.hs !== undefined ? match.hs :
+                       (match.scoreHome !== undefined ? match.scoreHome : null));
+            const as2 = match.awayScore !== undefined ? match.awayScore :
+                        (match.as !== undefined ? match.as :
+                        (match.scoreAway !== undefined ? match.scoreAway : null));
 
-              const home = match.homeTeam || match.h;
-              const away = match.awayTeam || match.a;
-              const homeScore = parseInt(match.homeScore);
-              const awayScore = parseInt(match.awayScore);
+            if (hs !== null && hs !== undefined && as2 !== null && as2 !== undefined) {
+              const homeScore = parseInt(hs);
+              const awayScore = parseInt(as2);
 
               // S'assurer que les équipes existent dans teamStats
-              if (teamStats[home] && teamStats[away]) {
+              if (!isNaN(homeScore) && !isNaN(awayScore) && teamStats[home] && teamStats[away]) {
                 // Incrémenter les matchs joués
                 teamStats[home].j++;
                 teamStats[away].j++;
