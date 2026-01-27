@@ -1189,11 +1189,7 @@ export default function HyeneScores() {
       }));
       setTeams(normalizedTeams);
 
-      // Mettre à jour la progression
-      const allSeasonMatches = updatedAppData.entities.matches.filter(
-        block => block.championship === championshipKey &&
-                 block.season === parseInt(selectedSeason)
-      );
+      // Mettre à jour la progression (allSeasonMatches déjà défini plus haut)
       const maxMatchday = Math.max(...allSeasonMatches.map(b => b.matchday), parseInt(selectedJournee));
       const totalMatchdays = 18;
       setSeasonProgress({
