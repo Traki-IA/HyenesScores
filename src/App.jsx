@@ -1804,28 +1804,28 @@ export default function HyeneScores() {
 
       {/* CLASSEMENT */}
       {selectedTab === 'classement' && (
-        <div className="h-full flex flex-col ios26-vibrancy pb-20">
-          <div className="px-3 pt-2 pb-1 flex-shrink-0">
-            <div className="ios26-header rounded-xl p-2 text-center">
-              <h1 className="text-cyan-400 text-lg font-extrabold tracking-widest glow-cyan">CLASSEMENT</h1>
+        <div className="h-full flex flex-col ios26-vibrancy pb-16">
+          <div className="px-3 pt-1 pb-0.5 flex-shrink-0">
+            <div className="ios26-header rounded-lg p-1.5 text-center">
+              <h1 className="text-cyan-400 text-base font-extrabold tracking-widest glow-cyan">CLASSEMENT</h1>
             </div>
           </div>
 
           <div className="flex-1 px-3">
 
               {/* Selectors */}
-              <div className="py-1.5 border-b border-white/5 relative">
+              <div className="py-1 border-b border-white/5 relative">
                 <div className="flex items-stretch gap-2">
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setIsChampOpen(!isChampOpen)}
-                      className={`w-full h-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
+                      className={`w-full h-full ios26-btn rounded-lg px-2.5 py-1.5 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
                         isChampOpen ? 'border-cyan-500/50' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-lg">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
-                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                        <span className="text-base">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate text-[11px]">{championships.find(c => c.id === selectedChampionship)?.name}</span>
                       </div>
                       <svg className={`w-4 h-4 text-cyan-400 flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -1858,10 +1858,10 @@ export default function HyeneScores() {
                     )}
                   </div>
 
-                  <div className="w-28 relative">
+                  <div className="w-20 relative">
                     <button
                       onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className={`w-full h-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
+                      className={`w-full h-full ios26-btn rounded-lg px-2 py-1.5 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
                         isSeasonOpen ? 'border-cyan-500/50' : ''
                       }`}
                     >
@@ -1874,12 +1874,12 @@ export default function HyeneScores() {
                     {isSeasonOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setIsSeasonOpen(false)}></div>
-                        <div className="absolute right-0 top-full mt-1 ios26-dropdown rounded-xl z-50 w-28 max-h-48 overflow-y-auto">
+                        <div className="absolute right-0 top-full mt-1 ios26-dropdown rounded-xl z-50 w-24 max-h-48 overflow-y-auto">
                           {seasons.map(season => (
                             <button
                               key={season}
                               onClick={() => handleSeasonSelect(season)}
-                              className={`w-full px-3 py-2 text-xs font-semibold text-left ${
+                              className={`w-full px-2 py-1.5 text-xs font-semibold text-left ${
                                 selectedSeason === season
                                   ? 'bg-cyan-500/20 text-cyan-400'
                                   : 'text-white hover:bg-white/10'
@@ -1896,14 +1896,14 @@ export default function HyeneScores() {
               </div>
 
               {/* Progress Bar */}
-              <div className="py-1 border-b border-white/5">
-                <div className="flex items-center justify-between mb-1">
+              <div className="py-0.5 border-b border-white/5">
+                <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-[10px] font-semibold">
                     J{seasonProgress.currentMatchday}/{seasonProgress.totalMatchdays}
                   </span>
-                  <span className="text-cyan-400 text-xs font-bold glow-cyan">{seasonProgress.percentage}%</span>
+                  <span className="text-cyan-400 text-[10px] font-bold glow-cyan">{seasonProgress.percentage}%</span>
                 </div>
-                <div className="ios26-progress rounded-full h-1.5">
+                <div className="ios26-progress rounded-full h-1 mt-0.5">
                   <div
                     className="ios26-progress-bar h-full rounded-full"
                     style={{ width: `${seasonProgress.percentage}%` }}
@@ -1912,7 +1912,7 @@ export default function HyeneScores() {
               </div>
 
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-1 px-2 py-1.5 liquid-glass rounded-lg my-1">
+              <div className="grid grid-cols-12 gap-1 px-2 py-1 liquid-glass rounded-lg my-0.5">
                 <div className="col-span-1 text-gray-400 text-xs font-bold tracking-widest text-center">#</div>
                 <div className="col-span-4 text-gray-400 text-xs font-bold tracking-widest text-left">CLUB</div>
                 <div className="col-span-2 text-gray-400 text-xs font-bold tracking-widest text-center">PTS</div>
@@ -2085,29 +2085,29 @@ export default function HyeneScores() {
 
       {/* MATCH */}
       {selectedTab === 'match' && (
-        <div className="h-full flex flex-col ios26-vibrancy pb-20">
-          <div className="px-3 pt-2 pb-1 flex-shrink-0">
-            <div className="ios26-header rounded-xl p-2 text-center">
-              <h1 className="text-cyan-400 text-lg font-extrabold tracking-widest glow-cyan">MATCHS</h1>
+        <div className="h-full flex flex-col ios26-vibrancy pb-16">
+          <div className="px-3 pt-1 pb-0.5 flex-shrink-0">
+            <div className="ios26-header rounded-lg p-1.5 text-center">
+              <h1 className="text-cyan-400 text-base font-extrabold tracking-widest glow-cyan">MATCHS</h1>
             </div>
           </div>
 
           <div className="flex-1 px-3">
 
               {/* Selectors */}
-              <div className="py-1.5 border-b border-white/5 flex-shrink-0 relative">
+              <div className="py-1 border-b border-white/5 flex-shrink-0 relative">
                 <div className="flex items-stretch gap-2">
                   {/* Championship Dropdown */}
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setIsChampOpen(!isChampOpen)}
-                      className={`w-full h-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
+                      className={`w-full h-full ios26-btn rounded-lg px-2.5 py-1.5 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
                         isChampOpen ? 'border-cyan-500/50' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-lg">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
-                        <span className="truncate">{championships.find(c => c.id === selectedChampionship)?.name}</span>
+                        <span className="text-base">{championships.find(c => c.id === selectedChampionship)?.icon}</span>
+                        <span className="truncate text-[11px]">{championships.find(c => c.id === selectedChampionship)?.name}</span>
                       </div>
                       <svg className={`w-3 h-3 text-cyan-400 flex-shrink-0 ${isChampOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -2141,10 +2141,10 @@ export default function HyeneScores() {
                   </div>
 
                   {/* Season Dropdown */}
-                  <div className="w-28 relative">
+                  <div className="w-20 relative">
                     <button
                       onClick={() => setIsSeasonOpen(!isSeasonOpen)}
-                      className={`w-full h-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
+                      className={`w-full h-full ios26-btn rounded-lg px-2 py-1.5 text-white text-xs font-semibold cursor-pointer flex items-center justify-between ${
                         isSeasonOpen ? 'border-cyan-500/50' : ''
                       }`}
                     >
@@ -2165,7 +2165,7 @@ export default function HyeneScores() {
                                 setSelectedSeason(season);
                                 setIsSeasonOpen(false);
                               }}
-                              className={`w-full px-3 py-2 text-xs font-semibold text-left ${
+                              className={`w-full px-2 py-1.5 text-xs font-semibold text-left ${
                                 selectedSeason === season
                                   ? 'bg-cyan-500/20 text-cyan-400'
                                   : 'text-white hover:bg-white/10'
@@ -2182,57 +2182,57 @@ export default function HyeneScores() {
               </div>
 
               {/* Navigation Journée - iOS 26 Style */}
-              <div className="py-1.5 border-b border-white/5 flex-shrink-0">
-                <div className="flex items-center justify-center gap-2">
+              <div className="py-0.5 border-b border-white/5 flex-shrink-0">
+                <div className="flex items-center justify-center gap-1.5">
                   <button
                     onClick={() => {
                       const currentIdx = journees.indexOf(selectedJournee);
                       if (currentIdx > 0) setSelectedJournee(journees[currentIdx - 1]);
                     }}
-                    className="w-8 h-8 flex items-center justify-center text-cyan-400 ios26-btn rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-7 h-7 flex items-center justify-center text-cyan-400 ios26-btn rounded-md disabled:opacity-30 disabled:cursor-not-allowed"
                     disabled={selectedJournee === '1'}
                   >
-                    <span className="text-sm font-bold">◀</span>
+                    <span className="text-xs font-bold">◀</span>
                   </button>
-                  <div className="liquid-glass rounded-lg px-4 py-1.5 flex items-center gap-2">
-                    <span className="text-gray-400 text-xs font-medium">J</span>
-                    <span className="text-cyan-400 text-base font-bold glow-cyan">{selectedJournee}</span>
-                    <span className="text-gray-500 text-xs">/</span>
-                    <span className="text-gray-400 text-xs">{journees.length}</span>
+                  <div className="liquid-glass rounded-md px-3 py-1 flex items-center gap-1.5">
+                    <span className="text-gray-400 text-[10px] font-medium">J</span>
+                    <span className="text-cyan-400 text-sm font-bold glow-cyan">{selectedJournee}</span>
+                    <span className="text-gray-500 text-[10px]">/</span>
+                    <span className="text-gray-400 text-[10px]">{journees.length}</span>
                   </div>
                   <button
                     onClick={() => {
                       const currentIdx = journees.indexOf(selectedJournee);
                       if (currentIdx < journees.length - 1) setSelectedJournee(journees[currentIdx + 1]);
                     }}
-                    className="w-8 h-8 flex items-center justify-center text-cyan-400 ios26-btn rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-7 h-7 flex items-center justify-center text-cyan-400 ios26-btn rounded-md disabled:opacity-30 disabled:cursor-not-allowed"
                     disabled={selectedJournee === journees[journees.length - 1]}
                   >
-                    <span className="text-sm font-bold">▶</span>
+                    <span className="text-xs font-bold">▶</span>
                   </button>
                 </div>
               </div>
 
               {/* Matches List */}
-              <div className="py-1.5">
+              <div className="py-0.5">
                 {/* Header */}
-                <div className="grid grid-cols-12 gap-1 py-1.5 mb-1 liquid-glass rounded-lg">
-                  <div className="col-span-5 text-center text-gray-400 text-[10px] font-bold tracking-widest">
+                <div className="grid grid-cols-12 gap-1 py-1 mb-0.5 liquid-glass rounded-md">
+                  <div className="col-span-5 text-center text-gray-400 text-[9px] font-bold tracking-widest">
                     DOMICILE
                   </div>
-                  <div className="col-span-2 text-center text-gray-400 text-[10px] font-bold tracking-widest">
+                  <div className="col-span-2 text-center text-gray-400 text-[9px] font-bold tracking-widest">
                     SCORE
                   </div>
-                  <div className="col-span-5 text-center text-gray-400 text-[10px] font-bold tracking-widest">
+                  <div className="col-span-5 text-center text-gray-400 text-[9px] font-bold tracking-widest">
                     EXTÉRIEUR
                   </div>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {matches.map((match, index) => (
                     <div
                       key={match.id}
-                      className="grid grid-cols-12 items-center gap-1 py-1.5 px-1 ios26-row"
+                      className="grid grid-cols-12 items-center gap-1 py-1 px-1 ios26-row"
                                           >
                       {/* Home Team */}
                       <div className="col-span-5 relative flex justify-start">
@@ -2428,23 +2428,23 @@ export default function HyeneScores() {
 
       {/* PALMARES */}
       {selectedTab === 'palmares' && (
-        <div className="h-full flex flex-col ios26-vibrancy overflow-y-auto pb-20">
-          <div className="px-3 pt-2 pb-1 flex-shrink-0">
-            <div className="ios26-header rounded-xl p-2 text-center">
-              <h1 className="text-cyan-400 text-lg font-extrabold tracking-widest glow-cyan">PALMARÈS</h1>
+        <div className="h-full flex flex-col ios26-vibrancy overflow-y-auto pb-16">
+          <div className="px-3 pt-1 pb-0.5 flex-shrink-0">
+            <div className="ios26-header rounded-lg p-1.5 text-center">
+              <h1 className="text-cyan-400 text-base font-extrabold tracking-widest glow-cyan">PALMARÈS</h1>
             </div>
           </div>
 
           <div className="flex-1 px-3">
 
               {/* Championship Buttons - iOS 26 Style */}
-              <div className="py-1.5 border-b border-white/5 flex-shrink-0">
-                <div className="flex items-center justify-center gap-2">
+              <div className="py-1 border-b border-white/5 flex-shrink-0">
+                <div className="flex items-center justify-center gap-1.5">
                   {championships.map(champ => (
                     <button
                       key={champ.id}
                       onClick={() => setSelectedChampionship(champ.id)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg ${
+                      className={`w-9 h-9 flex items-center justify-center rounded-lg text-base ${
                         selectedChampionship === champ.id
                           ? 'ios26-tab-active scale-110'
                           : 'ios26-btn hover:scale-105'
@@ -2457,10 +2457,10 @@ export default function HyeneScores() {
               </div>
 
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-1 px-2 py-1.5 liquid-glass rounded-lg my-1 flex-shrink-0">
-                <div className="col-span-3 text-gray-400 text-[10px] font-bold tracking-widest text-center">SAISON</div>
-                <div className="col-span-6 text-gray-400 text-[10px] font-bold tracking-widest text-center">CHAMPION</div>
-                <div className="col-span-3 text-gray-400 text-[10px] font-bold tracking-widest text-center">POINTS</div>
+              <div className="grid grid-cols-12 gap-1 px-2 py-1 liquid-glass rounded-md my-0.5 flex-shrink-0">
+                <div className="col-span-3 text-gray-400 text-[9px] font-bold tracking-widest text-center">SAISON</div>
+                <div className="col-span-6 text-gray-400 text-[9px] font-bold tracking-widest text-center">CHAMPION</div>
+                <div className="col-span-3 text-gray-400 text-[9px] font-bold tracking-widest text-center">POINTS</div>
               </div>
 
               {/* Champions List */}
@@ -2468,18 +2468,18 @@ export default function HyeneScores() {
                 {champions.map((champion, index) => (
                   <div
                     key={champion.season}
-                    className="grid grid-cols-12 gap-1 px-2 py-1 ios26-row items-center"
-                    style={{ height: '40px' }}
+                    className="grid grid-cols-12 gap-1 px-2 py-0.5 ios26-row items-center"
+                    style={{ height: '36px' }}
                   >
                     <div className="col-span-3 flex justify-center">
-                      <span className="text-cyan-400 text-base font-bold glow-cyan">{champion.season}</span>
+                      <span className="text-cyan-400 text-sm font-bold glow-cyan">{champion.season}</span>
                     </div>
                     <div className="col-span-6 text-center">
-                      <span className="text-white text-xs font-semibold tracking-wide">{champion.team}</span>
+                      <span className="text-white text-[11px] font-semibold tracking-wide">{champion.team}</span>
                     </div>
                     <div className="col-span-3 text-center">
-                      <span className="text-green-400 text-sm font-bold glow-green">{champion.points}</span>
-                      <span className="text-gray-400 text-[10px] ml-0.5">pts</span>
+                      <span className="text-green-400 text-xs font-bold glow-green">{champion.points}</span>
+                      <span className="text-gray-400 text-[9px] ml-0.5">pts</span>
                     </div>
                   </div>
                 ))}
@@ -2490,36 +2490,36 @@ export default function HyeneScores() {
 
       {/* PANTHEON */}
       {selectedTab === 'pantheon' && (
-        <div className="h-full flex flex-col ios26-vibrancy pb-20">
-          <div className="px-3 pt-2 pb-1 flex-shrink-0">
-            <div className="ios26-header rounded-xl p-2 text-center">
-              <h1 className="text-cyan-400 text-lg font-extrabold tracking-widest glow-cyan">PANTHÉON</h1>
+        <div className="h-full flex flex-col ios26-vibrancy pb-16">
+          <div className="px-3 pt-1 pb-0.5 flex-shrink-0">
+            <div className="ios26-header rounded-lg p-1.5 text-center">
+              <h1 className="text-cyan-400 text-base font-extrabold tracking-widest glow-cyan">PANTHÉON</h1>
             </div>
           </div>
 
           <div className="flex-1 px-3">
 
               {/* Table Header */}
-              <div className="py-1.5 px-1 liquid-glass rounded-lg my-1 flex-shrink-0">
+              <div className="py-1 px-1 liquid-glass rounded-md my-0.5 flex-shrink-0">
                 <div className="grid grid-cols-12 gap-0.5 items-center">
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">#</div>
-                  <div className="col-span-4 flex items-center text-left pl-0.5 text-gray-400 text-[10px] font-bold tracking-widest">ÉQUIPE</div>
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">
-                    <div className="text-sm">🏆</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">#</div>
+                  <div className="col-span-4 flex items-center text-left pl-0.5 text-gray-400 text-[9px] font-bold tracking-widest">ÉQUIPE</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">
+                    <div className="text-xs">🏆</div>
                   </div>
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">
-                    <div className="text-sm">🇫🇷</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">
+                    <div className="text-xs">🇫🇷</div>
                   </div>
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">
-                    <div className="text-sm">🇪🇸</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">
+                    <div className="text-xs">🇪🇸</div>
                   </div>
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">
-                    <div className="text-sm">🇮🇹</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">
+                    <div className="text-xs">🇮🇹</div>
                   </div>
-                  <div className="col-span-1 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">
-                    <div className="text-sm">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+                  <div className="col-span-1 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">
+                    <div className="text-xs">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
                   </div>
-                  <div className="col-span-2 flex justify-center text-gray-400 text-[10px] font-bold tracking-widest">TOTAL</div>
+                  <div className="col-span-2 flex justify-center text-gray-400 text-[9px] font-bold tracking-widest">TOTAL</div>
                 </div>
               </div>
 
@@ -2528,33 +2528,33 @@ export default function HyeneScores() {
                 {pantheonTeams.map((team, index) => (
                   <div
                     key={team.rank}
-                    className="py-0.5 px-1 ios26-row"
-                    style={{ height: '36px' }}
+                    className="py-0 px-1 ios26-row"
+                    style={{ height: '32px' }}
                   >
                     <div className="grid grid-cols-12 gap-0.5 items-center w-full h-full">
-                      <div className="col-span-1 flex items-center justify-center font-mono font-bold text-xs text-cyan-400 glow-cyan">
+                      <div className="col-span-1 flex items-center justify-center font-mono font-bold text-[10px] text-cyan-400 glow-cyan">
                         {team.rank < 10 ? `0${team.rank}` : team.rank}
                       </div>
                       <div className="col-span-4 flex items-center text-left pl-0.5">
-                        <span className="text-white text-xs font-bold tracking-tight">{team.name}</span>
+                        <span className="text-white text-[11px] font-bold tracking-tight">{team.name}</span>
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs font-medium">{team.trophies}</span>
+                        <span className="text-gray-300 text-[11px] font-medium">{team.trophies}</span>
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs font-medium">{team.france}</span>
+                        <span className="text-gray-300 text-[11px] font-medium">{team.france}</span>
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs font-medium">{team.spain}</span>
+                        <span className="text-gray-300 text-[11px] font-medium">{team.spain}</span>
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs font-medium">{team.italy}</span>
+                        <span className="text-gray-300 text-[11px] font-medium">{team.italy}</span>
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs font-medium">{team.england}</span>
+                        <span className="text-gray-300 text-[11px] font-medium">{team.england}</span>
                       </div>
                       <div className="col-span-2 flex items-center justify-center">
-                        <span className="text-green-400 text-base font-bold glow-green">{team.total}</span>
+                        <span className="text-green-400 text-sm font-bold glow-green">{team.total}</span>
                       </div>
                     </div>
                   </div>
@@ -2566,38 +2566,38 @@ export default function HyeneScores() {
 
       {/* REGLAGES */}
       {selectedTab === 'reglages' && (
-        <div className="h-full flex flex-col ios26-vibrancy pb-20">
-          <div className="px-3 pt-2 pb-1 flex-shrink-0">
-            <div className="ios26-header rounded-xl p-2 text-center">
-              <h1 className="text-cyan-400 text-lg font-extrabold tracking-widest glow-cyan">RÉGLAGES</h1>
+        <div className="h-full flex flex-col ios26-vibrancy pb-16">
+          <div className="px-3 pt-1 pb-0.5 flex-shrink-0">
+            <div className="ios26-header rounded-lg p-1.5 text-center">
+              <h1 className="text-cyan-400 text-base font-extrabold tracking-widest glow-cyan">RÉGLAGES</h1>
             </div>
           </div>
 
           <div className="flex-1 px-3">
-            <div className="space-y-2 mt-1">
+            <div className="space-y-1.5 mt-0.5">
 
               {/* Sauvegarde - iOS 26 Card */}
-              <div className="ios26-card rounded-xl p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center backdrop-blur-sm">
-                    <span className="text-base">💾</span>
+              <div className="ios26-card rounded-lg p-2.5">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-6 h-6 rounded-md bg-cyan-500/20 flex items-center justify-center backdrop-blur-sm">
+                    <span className="text-sm">💾</span>
                   </div>
-                  <h2 className="text-cyan-400 text-xs font-bold tracking-wide">SAUVEGARDE</h2>
+                  <h2 className="text-cyan-400 text-[11px] font-bold tracking-wide">SAUVEGARDE</h2>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <button
                     onClick={handleExportJSON}
-                    className="w-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold flex items-center justify-between group"
+                    className="w-full ios26-btn rounded-md px-2.5 py-1.5 text-white text-[11px] font-semibold flex items-center justify-between group"
                   >
                     <span className="group-hover:text-cyan-400">Exporter (JSON)</span>
-                    <span className="text-sm group-hover:scale-110">📥</span>
+                    <span className="text-xs group-hover:scale-110">📥</span>
                   </button>
                   <button
                     onClick={handleImportJSON}
-                    className="w-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold flex items-center justify-between group"
+                    className="w-full ios26-btn rounded-md px-2.5 py-1.5 text-white text-[11px] font-semibold flex items-center justify-between group"
                   >
                     <span className="group-hover:text-cyan-400">Importer (JSON)</span>
-                    <span className="text-sm group-hover:scale-110">📤</span>
+                    <span className="text-xs group-hover:scale-110">📤</span>
                   </button>
                   <input
                     ref={fileInputRef}
@@ -2610,32 +2610,32 @@ export default function HyeneScores() {
               </div>
 
               {/* Données - iOS 26 Card */}
-              <div className="ios26-card rounded-xl p-3" style={{ borderColor: 'rgba(34, 197, 94, 0.2)' }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center backdrop-blur-sm">
-                    <span className="text-base">🔄</span>
+              <div className="ios26-card rounded-lg p-2.5" style={{ borderColor: 'rgba(34, 197, 94, 0.2)' }}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-6 h-6 rounded-md bg-green-500/20 flex items-center justify-center backdrop-blur-sm">
+                    <span className="text-sm">🔄</span>
                   </div>
-                  <h2 className="text-green-400 text-xs font-bold tracking-wide">DONNÉES</h2>
+                  <h2 className="text-green-400 text-[11px] font-bold tracking-wide">DONNÉES</h2>
                 </div>
                 <button
                   onClick={handleRefreshData}
-                  className="w-full ios26-btn rounded-lg px-3 py-2 text-white text-xs font-semibold flex items-center justify-between group"
+                  className="w-full ios26-btn rounded-md px-2.5 py-1.5 text-white text-[11px] font-semibold flex items-center justify-between group"
                   style={{ borderColor: 'rgba(34, 197, 94, 0.2)' }}
                 >
                   <span className="group-hover:text-green-400">Actualiser l'affichage</span>
-                  <span className="text-sm group-hover:rotate-180">🔄</span>
+                  <span className="text-xs group-hover:rotate-180">🔄</span>
                 </button>
               </div>
 
               {/* Nouvelle Saison - iOS 26 Card */}
-              <div className="ios26-card rounded-xl p-3" style={{ borderColor: 'rgba(168, 85, 247, 0.2)' }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center backdrop-blur-sm">
-                    <span className="text-base font-bold text-purple-400">+</span>
+              <div className="ios26-card rounded-lg p-2.5" style={{ borderColor: 'rgba(168, 85, 247, 0.2)' }}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-6 h-6 rounded-md bg-purple-500/20 flex items-center justify-center backdrop-blur-sm">
+                    <span className="text-sm font-bold text-purple-400">+</span>
                   </div>
-                  <h2 className="text-purple-400 text-xs font-bold tracking-wide">NOUVELLE SAISON</h2>
+                  <h2 className="text-purple-400 text-[11px] font-bold tracking-wide">NOUVELLE SAISON</h2>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -2643,18 +2643,18 @@ export default function HyeneScores() {
                       onChange={(e) => setNewSeasonNumber(e.target.value)}
                       placeholder="N° (ex: 11)"
                       min="1"
-                      className="flex-1 ios26-input rounded-lg px-3 py-2 text-white text-xs font-medium outline-none placeholder-gray-500"
+                      className="flex-1 ios26-input rounded-md px-2.5 py-1.5 text-white text-[11px] font-medium outline-none placeholder-gray-500"
                       style={{ borderColor: 'rgba(168, 85, 247, 0.2)' }}
                     />
                     <button
                       onClick={handleCreateSeason}
-                      className="bg-purple-500/20 border border-purple-500/30 hover:bg-purple-500/30 rounded-lg px-4 py-2 text-purple-400 text-xs font-bold"
+                      className="bg-purple-500/20 border border-purple-500/30 hover:bg-purple-500/30 rounded-md px-3 py-1.5 text-purple-400 text-[11px] font-bold"
                     >
                       Créer
                     </button>
                   </div>
                   {seasons.length > 0 && (
-                    <p className="text-gray-500 text-[10px] font-medium">
+                    <p className="text-gray-500 text-[9px] font-medium">
                       Saisons : {seasons.map(s => `S${s}`).join(', ')}
                     </p>
                   )}
@@ -2662,19 +2662,19 @@ export default function HyeneScores() {
               </div>
 
               {/* Système - iOS 26 Card */}
-              <div className="ios26-card rounded-xl p-3" style={{ borderColor: 'rgba(239, 68, 68, 0.2)', background: 'linear-gradient(145deg, rgba(239, 68, 68, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)' }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-red-500/20 flex items-center justify-center backdrop-blur-sm">
-                    <span className="text-base">⚠️</span>
+              <div className="ios26-card rounded-lg p-2.5" style={{ borderColor: 'rgba(239, 68, 68, 0.2)', background: 'linear-gradient(145deg, rgba(239, 68, 68, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)' }}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-6 h-6 rounded-md bg-red-500/20 flex items-center justify-center backdrop-blur-sm">
+                    <span className="text-sm">⚠️</span>
                   </div>
-                  <h2 className="text-red-400 text-xs font-bold tracking-wide">SYSTÈME</h2>
+                  <h2 className="text-red-400 text-[11px] font-bold tracking-wide">SYSTÈME</h2>
                 </div>
                 <button
                   onClick={() => setShowResetModal(true)}
-                  className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 rounded-lg px-3 py-2 text-red-400 text-xs font-bold flex items-center justify-between group"
+                  className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 rounded-md px-2.5 py-1.5 text-red-400 text-[11px] font-bold flex items-center justify-between group"
                 >
-                  <span className="group-hover:text-red-300">Réinitialiser les données</span>
-                  <span className="text-sm group-hover:scale-110">🗑️</span>
+                  <span className="group-hover:text-red-300">Réinitialiser</span>
+                  <span className="text-xs group-hover:scale-110">🗑️</span>
                 </button>
               </div>
             </div>
